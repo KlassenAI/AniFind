@@ -1,4 +1,4 @@
-package com.android.anifind.ui.notifications
+package com.android.anifind.presentation.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.android.anifind.R
+import com.android.anifind.presentation.viewmodel.NotificationsViewModel
 
 class NotificationsFragment : Fragment() {
 

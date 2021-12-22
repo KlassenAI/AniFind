@@ -3,23 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/nav_search">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.android.anifind.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/nav_search"
+        android:name="com.android.anifind.presentation.ui.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.android.anifind.ui.dashboard.DashboardFragment"
+        android:id="@+id/nav_dashboard"
+        android:name="com.android.anifind.presentation.ui.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.android.anifind.ui.notifications.NotificationsFragment"
+        android:id="@+id/nav_notifications"
+        android:name="com.android.anifind.presentation.ui.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
 </navigation>
