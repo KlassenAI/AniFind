@@ -1,17 +1,16 @@
 package com.android.anifind.data.network
 
+import com.android.anifind.Constants.BASE_URL
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
 
-    private const val baseUrl = "https://shikimori.one/api/"
-
     fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .baseUrl(BASE_URL)
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
