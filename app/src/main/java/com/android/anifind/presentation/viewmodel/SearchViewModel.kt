@@ -1,13 +1,15 @@
 package com.android.anifind.presentation.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import androidx.paging.PagingData
+import androidx.paging.rxjava3.cachedIn
+import com.android.anifind.Constants.DEFAULT_QUERY
 import com.android.anifind.data.repository.Repository
 import com.android.anifind.domain.model.Anime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
@@ -22,9 +24,16 @@ class SearchViewModel @Inject constructor(
     private val _animes = MutableLiveData<List<Anime>>()
     val animes: LiveData<List<Anime>> = _animes
 
+    private val query = MutableLiveData(DEFAULT_QUERY)
+
+    val single = query.switchMap {
+        MutableLiveData(repository.searchSingle(it).cachedIn(viewModelScope))
+    }
+
     fun searchAnimes(search: String) {
-        compositeDisposable.add(
-            repository.getAnimes(mapOf("search" to search, "limit" to "20"))
+        query.postValue(search)
+        /*
+         repository.getAnimes(mapOf("search" to search, "limit" to "20"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -39,15 +48,10 @@ class SearchViewModel @Inject constructor(
                     // end
                     log("Complete")
                 })
-        )
+         */
     }
 
     private fun log(text: String) {
         Log.d("SearchViewModel", text)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.dispose()
     }
 }

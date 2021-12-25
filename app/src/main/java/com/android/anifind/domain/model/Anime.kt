@@ -13,6 +13,6 @@ data class Anime(
     val status: String,
     val episodes: Int,
     @SerializedName("episodes_aired") val episodesAired: Int,
-    @SerializedName("aired_on") val airedOn: String,
+    @SerializedName("aired_on") val airedOn: String?,
     @SerializedName("released_on") val releasedOn: String
 )

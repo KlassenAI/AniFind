@@ -38,7 +38,7 @@ class AnimeAdapter(
             binding.apply {
                 nameOriginal.text = anime.name
                 nameRussian.text = anime.russian
-                date.text = anime.airedOn.substringBefore("-")
+                date.text = anime.airedOn?.substringBefore("-")
                 rate.text = anime.score.toString()
                 Glide.with(this.anime)
                     .load(getImageUrl(anime.image.original))

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.anifind.Constants.DEBOUNCE_TIMEOUT
 import com.android.anifind.databinding.FragmentSearchBinding
 import com.android.anifind.domain.AnimeAdapter
+import com.android.anifind.domain.SingleAdapter
 import com.android.anifind.presentation.viewmodel.SearchViewModel
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit
 class SearchFragment : Fragment() {
 
     private val searchViewModel: SearchViewModel by activityViewModels()
-    private val animeAdapter: AnimeAdapter = AnimeAdapter(listOf())
+    private val animeAdapter = SingleAdapter()
     private val compositeDisposable = CompositeDisposable()
     private lateinit var binding: FragmentSearchBinding
 
@@ -37,8 +38,16 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        /*
         searchViewModel.animes.observe(viewLifecycleOwner, {
             animeAdapter.setListAnime(it)
+        })
+         */
+
+        searchViewModel.single.observe(viewLifecycleOwner, {
+            it.subscribe { pagingData ->
+                animeAdapter.submitData(lifecycle, pagingData)
+            }
         })
 
         binding.recycler.apply {
@@ -47,16 +56,13 @@ class SearchFragment : Fragment() {
             adapter = animeAdapter
         }
 
-        compositeDisposable.add(binding.editText.textChanges()
+        binding.editText.textChanges()
             .map { it.trim() }
             .debounce(DEBOUNCE_TIMEOUT, TimeUnit.MILLISECONDS)
             .filter { it.isNotEmpty() }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { searchViewModel.searchAnimes(it.toString()) })
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
+            .subscribe { query ->
+                searchViewModel.searchAnimes(query.toString())
+            }
     }
 }
