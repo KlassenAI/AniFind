@@ -11,8 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.anifind.Constants.DEBOUNCE_TIMEOUT
 import com.android.anifind.databinding.FragmentSearchBinding
-import com.android.anifind.domain.AnimeAdapter
-import com.android.anifind.domain.SingleAdapter
+import com.android.anifind.domain.AnimePagingAdapter
 import com.android.anifind.presentation.viewmodel.SearchViewModel
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +23,7 @@ import java.util.concurrent.TimeUnit
 class SearchFragment : Fragment() {
 
     private val searchViewModel: SearchViewModel by activityViewModels()
-    private val animeAdapter = SingleAdapter()
+    private val animeAdapter = AnimePagingAdapter()
     private val compositeDisposable = CompositeDisposable()
     private lateinit var binding: FragmentSearchBinding
 
@@ -38,14 +37,8 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*
-        searchViewModel.animes.observe(viewLifecycleOwner, {
-            animeAdapter.setListAnime(it)
-        })
-         */
-
         searchViewModel.single.observe(viewLifecycleOwner, {
-            it.subscribe { pagingData ->
+            it?.subscribe { pagingData ->
                 animeAdapter.submitData(lifecycle, pagingData)
             }
         })
@@ -59,10 +52,15 @@ class SearchFragment : Fragment() {
         binding.editText.textChanges()
             .map { it.trim() }
             .debounce(DEBOUNCE_TIMEOUT, TimeUnit.MILLISECONDS)
-            .filter { it.isNotEmpty() }
+            .filter { it.isNotEmpty() && it.length > 2 }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { query ->
                 searchViewModel.searchAnimes(query.toString())
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
     }
 }

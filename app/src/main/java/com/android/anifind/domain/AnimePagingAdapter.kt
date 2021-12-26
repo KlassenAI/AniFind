@@ -12,7 +12,7 @@ import com.android.anifind.databinding.ItemAnimeBinding
 import com.android.anifind.domain.model.Anime
 import com.bumptech.glide.Glide
 
-class SingleAdapter : PagingDataAdapter<Anime, SingleAdapter.ViewHolder>(DiffCallback) {
+class AnimePagingAdapter : PagingDataAdapter<Anime, AnimePagingAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemBinding =
