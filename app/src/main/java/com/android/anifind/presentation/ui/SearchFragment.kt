@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.anifind.Constants.DEBOUNCE_TIMEOUT
 import com.android.anifind.databinding.FragmentSearchBinding
 import com.android.anifind.domain.AnimePagingAdapter
-import com.android.anifind.presentation.viewmodel.SearchViewModel
+import com.android.anifind.presentation.viewmodel.OverviewViewModel
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
-    private val searchViewModel: SearchViewModel by activityViewModels()
+    private val searchViewModel: OverviewViewModel by activityViewModels()
     private val animeAdapter = AnimePagingAdapter()
     private val compositeDisposable = CompositeDisposable()
     private lateinit var binding: FragmentSearchBinding
@@ -37,10 +37,8 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchViewModel.single.observe(viewLifecycleOwner, {
-            it?.subscribe { pagingData ->
-                animeAdapter.submitData(lifecycle, pagingData)
-            }
+        searchViewModel.animes.observe(viewLifecycleOwner, {
+            it?.subscribe { pagingData -> animeAdapter.submitData(lifecycle, pagingData) }
         })
 
         binding.recycler.apply {
@@ -54,9 +52,7 @@ class SearchFragment : Fragment() {
             .debounce(DEBOUNCE_TIMEOUT, TimeUnit.MILLISECONDS)
             .filter { it.isNotEmpty() && it.length > 2 }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { query ->
-                searchViewModel.searchAnimes(query.toString())
-            }
+            .subscribe { query -> searchViewModel.searchAnimes(query.toString()) }
     }
 
     override fun onDestroy() {
