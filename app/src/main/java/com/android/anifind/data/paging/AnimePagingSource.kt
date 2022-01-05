@@ -32,8 +32,6 @@ class AnimePagingSource @Inject constructor(
         )
     }
 
-    override fun getRefreshKey(state: PagingState<Long, Anime>): Long? {
-        return null
-    }
+    override fun getRefreshKey(state: PagingState<Long, Anime>): Long? = null
 }
 

@@ -14,24 +14,21 @@ import javax.inject.Singleton
 @Singleton
 class Repository @Inject constructor(private val service: RetrofitService) {
 
-    fun getAnimes(params: Map<String, String> = mapOf("limit" to "50")) = service.getAnimes(params)
-
     fun getSingle(params: Map<String, String> = mapOf("limit" to "50")) = service.getSingle(params)
 
     fun searchSingle(search: String? = null): Observable<PagingData<Anime>> {
         val map = hashMapOf<String, String>()
         search?.let { map["search"] = it }
         map["limit"] = "20"
-        return Pager(
-            config = PagingConfig(pageSize = 20, maxSize = 100, enablePlaceholders = false),
-            pagingSourceFactory = { AnimePagingSource(this, map) }
-        ).observable
+        return getPager(map)
     }
 
     fun requestFilterAnimes(map: HashMap<String, String>): Observable<PagingData<Anime>> {
-        return Pager(
-            config = PagingConfig(pageSize = 20, maxSize = 100, enablePlaceholders = false),
-            pagingSourceFactory = { AnimePagingSource(this, map) }
-        ).observable
+        return getPager(map)
     }
+
+    private fun getPager(map: HashMap<String, String>) = Pager(
+        config = PagingConfig(pageSize = 20, maxSize = 100, enablePlaceholders = false),
+        pagingSourceFactory = { AnimePagingSource(this, map) }
+    ).observable
 }

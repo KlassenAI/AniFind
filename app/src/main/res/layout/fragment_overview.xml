@@ -5,15 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="8dp"
     tools:context=".presentation.ui.OverviewFragment">
+
+    <Button
+        android:id="@+id/btn_recent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="Недавние"
+        android:visibility="gone"
+        app:icon="@drawable/ic_time"
+        app:iconGravity="textStart" />
 
     <Button
         android:id="@+id/btn_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:text="Поиск"
@@ -25,12 +36,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:text="Фильтр"
         app:icon="@drawable/ic_filter"
+        app:iconGravity="textStart" />
+
+    <Button
+        android:id="@+id/btn_recommendations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="Рекомендации"
+        app:icon="@drawable/ic_star"
+        app:iconGravity="textStart" />
+
+    <Button
+        android:id="@+id/btn_random"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="Рандом"
+        app:icon="@drawable/ic_shuffle"
+        app:iconGravity="textStart" />
+
+    <Button
+        android:id="@+id/btn_popular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="Популярное"
+        app:icon="@drawable/ic_popularity"
+        app:iconGravity="textStart" />
+
+    <Button
+        android:id="@+id/btn_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="Календарь"
+        app:icon="@drawable/ic_calendar"
         app:iconGravity="textStart" />
 
 </LinearLayout>
