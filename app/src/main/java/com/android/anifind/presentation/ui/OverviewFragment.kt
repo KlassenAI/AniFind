@@ -9,11 +9,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.android.anifind.R
 import com.android.anifind.databinding.FragmentOverviewBinding
+import com.android.anifind.extensions.navigateToFilterFragment
+import com.android.anifind.extensions.navigateToSearchFragment
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
 
-class OverviewFragment : Fragment(R.layout.fragment_overview) {
+class OverviewFragment : Fragment() {
 
-
+    private val viewModel by activityViewModels<OverviewViewModel>()
     private lateinit var binding: FragmentOverviewBinding
 
     override fun onCreateView(
@@ -27,8 +29,12 @@ class OverviewFragment : Fragment(R.layout.fragment_overview) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnSearch.setOnClickListener {
-            findNavController().navigate(R.id.searchFragment)
+        binding.apply {
+            btnSearch.setOnClickListener { navigateToSearchFragment() }
+            btnFilter.setOnClickListener {
+                viewModel.setFilterChanging()
+                navigateToFilterFragment()
+            }
         }
     }
 }

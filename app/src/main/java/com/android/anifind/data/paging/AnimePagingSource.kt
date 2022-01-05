@@ -1,4 +1,4 @@
-package com.android.anifind.domain
+package com.android.anifind.data.paging
 
 import androidx.paging.PagingState
 import androidx.paging.rxjava3.RxPagingSource

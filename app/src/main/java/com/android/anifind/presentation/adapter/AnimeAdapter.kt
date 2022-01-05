@@ -1,4 +1,4 @@
-package com.android.anifind.domain
+package com.android.anifind.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.rxjava3.observable
 import com.android.anifind.data.network.RetrofitService
-import com.android.anifind.domain.AnimePagingSource
+import com.android.anifind.data.paging.AnimePagingSource
 import com.android.anifind.domain.model.Anime
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
@@ -22,6 +22,13 @@ class Repository @Inject constructor(private val service: RetrofitService) {
         val map = hashMapOf<String, String>()
         search?.let { map["search"] = it }
         map["limit"] = "20"
+        return Pager(
+            config = PagingConfig(pageSize = 20, maxSize = 100, enablePlaceholders = false),
+            pagingSourceFactory = { AnimePagingSource(this, map) }
+        ).observable
+    }
+
+    fun requestFilterAnimes(map: HashMap<String, String>): Observable<PagingData<Anime>> {
         return Pager(
             config = PagingConfig(pageSize = 20, maxSize = 100, enablePlaceholders = false),
             pagingSourceFactory = { AnimePagingSource(this, map) }

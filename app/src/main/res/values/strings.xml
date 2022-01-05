@@ -3,4 +3,126 @@
     <string name="title_home">Главная</string>
     <string name="title_overview">Обзор</string>
     <string name="title_bookmarks">Закладки</string>
+
+    <string-array name="sort_ui_items">
+        <item>Не важно</item>
+        <item>По рейтингу</item>
+        <item>По популярности</item>
+        <item>По дате релиза</item>
+        <item>Случайным образом</item>
+    </string-array>
+
+    <string-array name="sort_data_items">
+        <item>ranked</item>
+        <item>popularity</item>
+        <item>aired_on</item>
+        <item>random</item>
+    </string-array>
+
+    <string-array name="kind_ui_items">
+        <item>Не важно</item>
+        <item>Сериал</item>
+        <item>Фильм</item>
+        <item>OVA</item>
+        <item>ONA</item>
+        <item>Special</item>
+        <item>Музыка</item>
+    </string-array>
+
+    <string-array name="kind_data_items">
+        <item>tv</item>
+        <item>movie</item>
+        <item>ova</item>
+        <item>ona</item>
+        <item>special</item>
+        <item>music</item>
+    </string-array>
+
+    <string-array name="episodes_ui_items">
+        <item>Не важно</item>
+        <item>Около 13</item>
+        <item>Около 24</item>
+        <item>Больше 48</item>
+    </string-array>
+
+    <string-array name="episodes_data_items">
+        <item>tv_13</item>
+        <item>tv_24</item>
+        <item>tv_48</item>
+    </string-array>
+
+    <string-array name="status_ui_items">
+        <item>Не важно</item>
+        <item>Анонс</item>
+        <item>Онкоинг</item>
+        <item>Вышел</item>
+    </string-array>
+
+    <string-array name="status_data_items">
+        <item>anons</item>
+        <item>ongoing</item>
+        <item>released</item>
+    </string-array>
+
+    <string-array name="season_ui_items">
+        <item>Не важно</item>
+        <item>Зима</item>
+        <item>Весна</item>
+        <item>Лето</item>
+        <item>Осень</item>
+    </string-array>
+
+    <string-array name="season_data_items">
+        <item>winter</item>
+        <item>spring</item>
+        <item>summer</item>
+        <item>autumn</item>
+    </string-array>
+
+    <string-array name="score_ui_items">
+        <item>Не важно</item>
+        <item>9</item>
+        <item>8</item>
+        <item>7</item>
+        <item>6</item>
+    </string-array>
+
+    <string-array name="score_data_items">
+        <item>9</item>
+        <item>8</item>
+        <item>7</item>
+        <item>6</item>
+    </string-array>
+
+    <string-array name="duration_ui_items">
+        <item>Не важно</item>
+        <item>Меньше 10 минут</item>
+        <item>Меньше 30 минут</item>
+        <item>Больше 30 минут</item>
+    </string-array>
+
+    <string-array name="duration_data_items">
+        <item>S</item>
+        <item>D</item>
+        <item>F</item>
+    </string-array>
+
+    <string-array name="rating_ui_items">
+        <item>Не важно</item>
+        <item>G (для всех возрастов)</item>
+        <item>PG (для детей)</item>
+        <item>PG_13 (от 13 лет)</item>
+        <item>R (насилие и/или нецензурная лексика)</item>
+        <item>R+ (частичная нагота)</item>
+        <item>RX (сексуальный контект)</item>
+    </string-array>
+
+    <string-array name="rating_data_items">
+        <item>g</item>
+        <item>pg</item>
+        <item>pg_13</item>
+        <item>r</item>
+        <item>r_plus</item>
+        <item>rx</item>
+    </string-array>
 </resources>

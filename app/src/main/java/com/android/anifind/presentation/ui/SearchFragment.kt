@@ -6,12 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.anifind.Constants.DEBOUNCE_TIMEOUT
 import com.android.anifind.databinding.FragmentSearchBinding
-import com.android.anifind.domain.AnimePagingAdapter
+import com.android.anifind.extensions.init
+import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,8 +21,7 @@ import java.util.concurrent.TimeUnit
 class SearchFragment : Fragment() {
 
     private val searchViewModel: OverviewViewModel by activityViewModels()
-    private val animeAdapter = AnimePagingAdapter()
-    private val compositeDisposable = CompositeDisposable()
+    private val adapter = AnimePagingAdapter()
     private lateinit var binding: FragmentSearchBinding
 
     override fun onCreateView(
@@ -37,15 +34,11 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchViewModel.animes.observe(viewLifecycleOwner, {
-            it?.subscribe { pagingData -> animeAdapter.submitData(lifecycle, pagingData) }
-        })
+        binding.recycler.init(adapter)
 
-        binding.recycler.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            addItemDecoration(DividerItemDecoration(requireContext(), VERTICAL))
-            adapter = animeAdapter
-        }
+        searchViewModel.animes.observe(viewLifecycleOwner, {
+            it?.subscribe { pagingData -> adapter.submitData(lifecycle, pagingData) }
+        })
 
         binding.editText.textChanges()
             .map { it.trim() }
@@ -53,10 +46,5 @@ class SearchFragment : Fragment() {
             .filter { it.isNotEmpty() && it.length > 2 }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { query -> searchViewModel.searchAnimes(query.toString()) }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
     }
 }

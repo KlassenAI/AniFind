@@ -1,11 +1,15 @@
-package com.android.anifind.domain
+package com.android.anifind.presentation.adapter
 
+import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.android.anifind.Constants
 import com.android.anifind.R
 import com.android.anifind.databinding.ItemAnimeBinding
@@ -43,8 +47,14 @@ class AnimePagingAdapter : PagingDataAdapter<Anime, AnimePagingAdapter.ViewHolde
                     } else {
                         rate.text = anime.score.toString()
                     }
+
                     Glide.with(this.anime)
                         .load(getImageUrl(anime.image.original))
+                        .placeholder(CircularProgressDrawable(itemView.context).apply {
+                            strokeWidth = 5f
+                            centerRadius = 30f
+                            start()
+                        })
                         .centerCrop()
                         .error(R.drawable.error_load)
                         .fallback(R.drawable.error_load)
@@ -57,13 +67,7 @@ class AnimePagingAdapter : PagingDataAdapter<Anime, AnimePagingAdapter.ViewHolde
     }
 
     object DiffCallback : DiffUtil.ItemCallback<Anime>() {
-
-        override fun areItemsTheSame(old: Anime, new: Anime): Boolean {
-            return old.id == new.id
-        }
-
-        override fun areContentsTheSame(old: Anime, new: Anime): Boolean {
-            return old == new
-        }
+        override fun areItemsTheSame(old: Anime, new: Anime): Boolean = old.id == new.id
+        override fun areContentsTheSame(old: Anime, new: Anime): Boolean = old == new
     }
 }
