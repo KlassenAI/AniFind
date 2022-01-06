@@ -4,7 +4,6 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.PagingData
-import androidx.paging.rxjava3.cachedIn
 import com.android.anifind.data.repository.Repository
 import com.android.anifind.domain.model.Anime
 import com.android.anifind.domain.model.Genre
@@ -12,8 +11,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 import kotlin.collections.HashMap
 
@@ -23,11 +20,20 @@ class OverviewViewModel @Inject constructor(
     private val application: Application
 ) : ViewModel() {
 
-    private val _animes = MutableLiveData<Observable<PagingData<Anime>>?>()
-    val animes: LiveData<Observable<PagingData<Anime>>?> = _animes
+    private val _recentRequests = MutableLiveData(arrayListOf<String>())
+    val recentRequests: LiveData<ArrayList<String>> = _recentRequests
+    private val _requestedAnimes = MutableLiveData<Observable<PagingData<Anime>>?>()
+    val requestedAnimes: LiveData<Observable<PagingData<Anime>>?> = _requestedAnimes
 
-    fun searchAnimes(query: String) {
-        _animes.postValue(repository.searchSingle(query).cachedIn(viewModelScope))
+    fun requestAnimes(query: String) = _requestedAnimes.postValue(repository.requestAnimes(query))
+
+    fun saveRequest(query: String) {
+        _recentRequests.value?.remove(query)
+        _recentRequests.value?.add(query)
+    }
+
+    fun clearRecentRequests() {
+        _recentRequests.postValue(arrayListOf())
     }
 
     private val _filterAnimes = MutableLiveData<Observable<PagingData<Anime>>?>()

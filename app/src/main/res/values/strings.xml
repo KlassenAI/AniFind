@@ -4,6 +4,22 @@
     <string name="title_overview">Обзор</string>
     <string name="title_bookmarks">Закладки</string>
 
+    <string name="cd_backward">Назад</string>
+    <string name="text_filter">Фильтр</string>
+    <string name="btn_clear">Очистить</string>
+    <string name="btn_apply">Применить</string>
+    <string name="btn_shuffle">Рандом</string>
+    <string name="btn_change">Изменить</string>
+    <string name="hint_sort">Сортировка</string>
+    <string name="text_irrelevant">Не важно</string>
+    <string name="hint_kind">Категория</string>
+    <string name="hint_status">Статус</string>
+    <string name="hint_genres">Жанры</string>
+    <string name="hint_year">Год</string>
+    <string name="hint_season">Сезон</string>
+    <string name="hint_search">Поиск</string>
+    <string name="text_recent">Недавние</string>
+
     <string-array name="sort_ui_items">
         <item>Не важно</item>
         <item>По рейтингу</item>

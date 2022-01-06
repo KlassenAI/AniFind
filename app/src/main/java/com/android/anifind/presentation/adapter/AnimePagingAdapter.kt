@@ -1,10 +1,9 @@
 package com.android.anifind.presentation.adapter
 
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -25,46 +24,57 @@ class AnimePagingAdapter : PagingDataAdapter<Anime, AnimePagingAdapter.ViewHolde
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val anime = getItem(position)
-        holder.bind(anime)
+        getItem(position)?.let { holder.bind(it) }
     }
 
     class ViewHolder(private val binding: ItemAnimeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(anime: Anime?) {
-            if (anime != null) {
-                binding.apply {
-                    nameOriginal.text = anime.name
-                    nameRussian.text = anime.russian
-                    if (anime.airedOn == null) {
-                        date.isVisible = false
-                    } else {
-                        date.text = anime.airedOn.substringBefore("-")
-                    }
-                    if (anime.score == 0.0) {
-                        rate.isVisible = false
-                    } else {
-                        rate.text = anime.score.toString()
-                    }
-
-                    Glide.with(this.anime)
-                        .load(getImageUrl(anime.image.original))
-                        .placeholder(CircularProgressDrawable(itemView.context).apply {
-                            strokeWidth = 5f
-                            centerRadius = 30f
-                            start()
-                        })
-                        .centerCrop()
-                        .error(R.drawable.error_load)
-                        .fallback(R.drawable.error_load)
-                        .into(poster)
-                }
+        fun bind(anime: Anime) {
+            binding.apply {
+                nameOriginal.text = anime.name
+                nameRussian.setOrHideText(anime.russian)
+                date.setOrHideText(anime.airedOn?.getYear())
+                rate.setOrHideNumber(anime.score)
+                poster.setImage(anime.image.original)
             }
         }
 
         private fun getImageUrl(url: String) = Constants.IMAGE_URL + url
+
+        private fun TextView.setOrHideText(text: String?) {
+            if (text.isNullOrEmpty()) {
+                isVisible = false
+            } else {
+                this.text = text
+            }
+        }
+
+        private fun String.getYear() = this.substringBefore("-")
+
+        private fun TextView.setOrHideNumber(number: Double) {
+            if (number == 0.0) {
+                isVisible = false
+            } else {
+                text = number.toString()
+            }
+        }
+
+        private fun ImageView.setImage(url: String) {
+            Glide.with(this)
+                .load(getImageUrl(url))
+                .placeholder(CircularProgressDrawable(itemView.context).apply {
+                    strokeWidth = 5f
+                    centerRadius = 30f
+                    start()
+                })
+                .centerCrop()
+                .error(R.drawable.error_load)
+                .fallback(R.drawable.error_load)
+                .into(this)
+        }
     }
+
 
     object DiffCallback : DiffUtil.ItemCallback<Anime>() {
         override fun areItemsTheSame(old: Anime, new: Anime): Boolean = old.id == new.id

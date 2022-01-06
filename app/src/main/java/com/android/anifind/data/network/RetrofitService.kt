@@ -9,8 +9,5 @@ import retrofit2.http.QueryMap
 interface RetrofitService {
 
     @GET("animes")
-    fun getAnimes(@QueryMap params: Map<String, String>): Observable<List<Anime>>
-
-    @GET("animes")
-    fun getSingle(@QueryMap params: Map<String, String>): Single<List<Anime>>
+    fun requestAnimes(@QueryMap params: Map<String, String>): Single<List<Anime>>
 }
