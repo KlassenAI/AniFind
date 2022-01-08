@@ -1,9 +1,9 @@
 package com.android.anifind.presentation.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.PagingData
+import androidx.paging.rxjava3.cachedIn
 import com.android.anifind.data.repository.Repository
 import com.android.anifind.domain.model.Anime
 import com.android.anifind.domain.model.Genre
@@ -22,10 +22,13 @@ class OverviewViewModel @Inject constructor(
 
     private val _recentRequests = MutableLiveData(arrayListOf<String>())
     val recentRequests: LiveData<ArrayList<String>> = _recentRequests
-    private val _requestedAnimes = MutableLiveData<Observable<PagingData<Anime>>?>()
-    val requestedAnimes: LiveData<Observable<PagingData<Anime>>?> = _requestedAnimes
+    private val _searchAnimes = MutableLiveData<PagingData<Anime>>()
+    val searchAnimes: LiveData<PagingData<Anime>> = _searchAnimes
 
-    fun requestAnimes(query: String) = _requestedAnimes.postValue(repository.requestAnimes(query))
+    fun requestAnimes(query: String) {
+        repository.requestAnimes(query).cachedIn(viewModelScope)
+            .subscribe({ _searchAnimes.postValue(it) }, {})
+    }
 
     fun saveRequest(query: String) {
         _recentRequests.value?.remove(query)

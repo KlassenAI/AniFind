@@ -33,12 +33,11 @@ class OnGoingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter.onItemClick = {
-            bookmarksViewModel.setAnime(it)
-            findNavController().navigate(R.id.action_fragmentHome_to_animeFragment)
-        }
         binding.apply {
-            recycler.init(adapter, progressBar, errorMessage)
+            recycler.init(adapter, progressBar, errorMessage) {
+                bookmarksViewModel.setAnime(it)
+                findNavController().navigate(R.id.action_fragmentHome_to_animeFragment)
+            }
             btnRetry.setOnClickListener { adapter.retry() }
         }
         homeViewModel.ongoings.observe(viewLifecycleOwner) { adapter.submitData(lifecycle, it) }

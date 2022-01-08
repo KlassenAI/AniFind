@@ -47,8 +47,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.requestedAnimes.observe(viewLifecycleOwner, {
-            it?.subscribe { data -> animeAdapter.submitData(lifecycle, data) }
+        viewModel.searchAnimes.observe(viewLifecycleOwner, {
+            animeAdapter.submitData(lifecycle, it)
         })
         viewModel.recentRequests.observe(viewLifecycleOwner, {
             requestAdapter.setData(it)
