@@ -21,7 +21,6 @@ fun <VH : RecyclerView.ViewHolder> RecyclerView.init(paramAdapter: PagingDataAda
 fun <VH : RecyclerView.ViewHolder> RecyclerView.init(
     paramAdapter: PagingDataAdapter<Anime, VH>,
     loadingView: View,
-    notLoadingView: View,
     errorView: View
 ) {
     layoutManager = LinearLayoutManager(context)
@@ -31,7 +30,7 @@ fun <VH : RecyclerView.ViewHolder> RecyclerView.init(
     )
     paramAdapter.addLoadStateListener {
         loadingView.isVisible =  it.source.refresh is LoadState.Loading
-        notLoadingView.isVisible =  it.source.refresh is LoadState.NotLoading
+        this.isVisible =  it.source.refresh is LoadState.NotLoading
         errorView.isVisible = it.source.refresh is LoadState.Error
     }
 }

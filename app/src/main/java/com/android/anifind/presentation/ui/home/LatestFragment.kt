@@ -40,7 +40,7 @@ class LatestFragment : Fragment() {
             findNavController().navigate(R.id.action_fragmentHome_to_animeFragment)
         }
         binding.apply {
-            recycler.init(adapter, progressBar, recycler, errorMessage)
+            recycler.init(adapter, progressBar, errorMessage)
             btnRetry.setOnClickListener { adapter.retry() }
         }
         homeViewModel.latest.observe(viewLifecycleOwner) { adapter.submitData(lifecycle, it) }
