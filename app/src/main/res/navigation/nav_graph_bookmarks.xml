@@ -6,6 +6,6 @@
     app:startDestination="@id/bookmarksFragment">
     <fragment
         android:id="@+id/bookmarksFragment"
-        android:name="com.android.anifind.presentation.ui.BookmarksFragment"
+        android:name="com.android.anifind.presentation.ui.bookmarks.BookmarksFragment"
         tools:layout="@layout/fragment_bookmarks" />
 </navigation>

@@ -1,4 +1,4 @@
-package com.android.anifind.domain
+package com.android.anifind.domain.model
 
 class QueryMap(builder: Builder) {
     var limit: String = "20"

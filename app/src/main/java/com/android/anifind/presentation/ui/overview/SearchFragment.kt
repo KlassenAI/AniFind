@@ -1,4 +1,4 @@
-package com.android.anifind.presentation.ui
+package com.android.anifind.presentation.ui.overview
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,6 @@ import com.android.anifind.Constants.DEBOUNCE_TIMEOUT
 import com.android.anifind.databinding.FragmentSearchBinding
 import com.android.anifind.extensions.init
 import com.android.anifind.extensions.navigateUp
-import com.android.anifind.presentation.adapter.AdapterType
 import com.android.anifind.presentation.adapter.AdapterType.DEFAULT
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.adapter.RequestAdapter

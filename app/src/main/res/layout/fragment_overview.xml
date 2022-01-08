@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dp"
-    tools:context=".presentation.ui.OverviewFragment">
+    tools:context=".presentation.ui.overview.OverviewFragment">
 
     <Button
         android:id="@+id/btn_recent"

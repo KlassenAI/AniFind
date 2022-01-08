@@ -1,4 +1,4 @@
-package com.android.anifind.presentation.ui
+package com.android.anifind.presentation.ui.bookmarks
 
 import androidx.fragment.app.Fragment
 import com.android.anifind.R

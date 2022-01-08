@@ -1,21 +1,23 @@
 package com.android.anifind.presentation.ui.home
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.android.anifind.R
 import com.android.anifind.databinding.FragmentLatestBinding
 import com.android.anifind.extensions.init
-import com.android.anifind.presentation.adapter.AdapterType
 import com.android.anifind.presentation.adapter.AdapterType.DEFAULT
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.viewmodel.BookmarksViewModel
 import com.android.anifind.presentation.viewmodel.HomeViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 class LatestFragment : Fragment() {
 
@@ -37,7 +39,16 @@ class LatestFragment : Fragment() {
             bookmarksViewModel.setAnime(it)
             findNavController().navigate(R.id.action_fragmentHome_to_animeFragment)
         }
-        binding.recycler.init(adapter)
+        binding.apply {
+            recycler.init(adapter)
+            btnRetry.setOnClickListener { adapter.retry() }
+            adapter.addLoadStateListener {
+                progressBar.isVisible =  it.source.refresh is LoadState.Loading
+                recycler.isVisible =  it.source.refresh is LoadState.NotLoading
+                errorMessage.isVisible = it.source.refresh is LoadState.Error
+            }
+        }
         homeViewModel.latest.observe(viewLifecycleOwner) { adapter.submitData(lifecycle, it) }
+
     }
 }

@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private val homeViewModel by activityViewModels<HomeViewModel>()
+    private val viewModel by activityViewModels<HomeViewModel>()
     private val titles = arrayListOf("Недавние", "Онкоинги", "Анонсы")
     private lateinit var binding: FragmentHomeBinding
 
@@ -26,12 +26,16 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.requestAll()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeViewModel.requestAll()
-        binding.viewPager.adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = titles[position]
-        }.attach()
+        binding.apply {
+            viewPager.adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
+            TabLayoutMediator(tabLayout, viewPager) { tab, p -> tab.text = titles[p] }.attach()
+        }
     }
 }

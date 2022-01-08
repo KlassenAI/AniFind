@@ -1,9 +1,6 @@
-package com.android.anifind.presentation.ui
+package com.android.anifind.presentation.ui.overview
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,21 +10,15 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.android.anifind.R
 import com.android.anifind.databinding.FragmentFilterBinding
-import com.android.anifind.domain.QueryMap
+import com.android.anifind.domain.model.QueryMap
 import com.android.anifind.domain.model.Genre
 import com.android.anifind.extensions.*
-import com.android.anifind.presentation.adapter.AdapterType
 import com.android.anifind.presentation.adapter.AdapterType.DEFAULT
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputLayout
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.*
 
 class FilterFragment : Fragment() {
 

@@ -148,4 +148,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_dont_watch">Не смотрел</string>
+    <string name="retry">Повторить</string>
+    <string name="text_there_was_mistake_in_loading">Произошла ошибка при загрузке данных</string>
 </resources>

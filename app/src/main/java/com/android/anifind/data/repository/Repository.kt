@@ -3,12 +3,10 @@ package com.android.anifind.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.rxjava3.flowable
 import androidx.paging.rxjava3.observable
 import com.android.anifind.data.network.RetrofitService
 import com.android.anifind.data.paging.AnimePagingSource
 import com.android.anifind.domain.model.Anime
-import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 import javax.inject.Singleton

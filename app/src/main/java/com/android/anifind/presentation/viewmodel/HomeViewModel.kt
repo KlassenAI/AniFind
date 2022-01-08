@@ -6,11 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.map
 import androidx.paging.rxjava3.cachedIn
 import com.android.anifind.data.repository.Repository
 import com.android.anifind.domain.model.Anime
+import com.android.anifind.domain.model.LoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
@@ -19,10 +20,13 @@ class HomeViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
 
-    private val isRequest = MutableLiveData(false)
+    private val isRequestMade = MutableLiveData(false)
 
     private val _latest = MutableLiveData<PagingData<Anime>>()
     val latest: LiveData<PagingData<Anime>> get() = _latest
+    private val _latestState = MutableLiveData<LoadState>()
+    val latestState: LiveData<LoadState> get() = _latestState
+
     private val _ongoings = MutableLiveData<PagingData<Anime>>()
     val ongoings: LiveData<PagingData<Anime>> get() = _ongoings
     private val _anons = MutableLiveData<PagingData<Anime>>()
@@ -30,25 +34,25 @@ class HomeViewModel @Inject constructor(
 
     private fun requestLatest() {
         repository.requestLatestAnimes().cachedIn(viewModelScope)
-            .subscribe({ _latest.postValue(it) }, { })
+            .subscribe({ _latest.postValue(it) }, {})
     }
 
     private fun requestOnGoings() {
         repository.requestOnGoingAnimes().cachedIn(viewModelScope)
-            .subscribe({ _ongoings.postValue(it) }, { })
+            .subscribe({ _ongoings.postValue(it) }, {})
     }
 
     private fun requestAnons() {
         repository.requestAnonsAnimes().cachedIn(viewModelScope)
-            .subscribe({ _anons.postValue(it) }, { })
+            .subscribe({ _anons.postValue(it) }, {})
     }
 
     fun requestAll() {
-        if (!isRequest.value!!) {
+        if (isRequestMade.value == false) {
             requestLatest()
             requestOnGoings()
             requestAnons()
-            isRequest.postValue(true)
+            isRequestMade.postValue(true)
         }
     }
 }

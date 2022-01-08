@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.android.anifind.R
 import com.android.anifind.databinding.FragmentOnGoingBinding
 import com.android.anifind.extensions.init
@@ -35,7 +37,15 @@ class OnGoingFragment : Fragment() {
             bookmarksViewModel.setAnime(it)
             findNavController().navigate(R.id.action_fragmentHome_to_animeFragment)
         }
-        binding.recycler.init(adapter)
+        binding.apply {
+            recycler.init(adapter)
+            btnRetry.setOnClickListener { adapter.retry() }
+            adapter.addLoadStateListener {
+                progressBar.isVisible =  it.source.refresh is LoadState.Loading
+                recycler.isVisible =  it.source.refresh is LoadState.NotLoading
+                errorMessage.isVisible = it.source.refresh is LoadState.Error
+            }
+        }
         homeViewModel.ongoings.observe(viewLifecycleOwner) { adapter.submitData(lifecycle, it) }
     }
 }
