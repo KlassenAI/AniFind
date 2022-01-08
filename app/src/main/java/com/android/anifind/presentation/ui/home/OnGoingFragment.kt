@@ -38,13 +38,8 @@ class OnGoingFragment : Fragment() {
             findNavController().navigate(R.id.action_fragmentHome_to_animeFragment)
         }
         binding.apply {
-            recycler.init(adapter)
+            recycler.init(adapter, progressBar, recycler, errorMessage)
             btnRetry.setOnClickListener { adapter.retry() }
-            adapter.addLoadStateListener {
-                progressBar.isVisible =  it.source.refresh is LoadState.Loading
-                recycler.isVisible =  it.source.refresh is LoadState.NotLoading
-                errorMessage.isVisible = it.source.refresh is LoadState.Error
-            }
         }
         homeViewModel.ongoings.observe(viewLifecycleOwner) { adapter.submitData(lifecycle, it) }
     }
