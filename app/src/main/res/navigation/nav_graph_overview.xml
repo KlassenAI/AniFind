@@ -7,7 +7,6 @@
     <fragment
         android:id="@+id/overviewFragment"
         android:name="com.android.anifind.presentation.ui.OverviewFragment"
-        android:label="fragment_overview"
         tools:layout="@layout/fragment_overview" >
         <action
             android:id="@+id/action_overviewFragment_to_searchFragment"
@@ -19,11 +18,9 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.android.anifind.presentation.ui.SearchFragment"
-        android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/filterFragment"
         android:name="com.android.anifind.presentation.ui.FilterFragment"
-        android:label="fragment_filter"
         tools:layout="@layout/fragment_filter" />
 </navigation>

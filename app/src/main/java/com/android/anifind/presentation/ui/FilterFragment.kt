@@ -19,6 +19,8 @@ import com.android.anifind.databinding.FragmentFilterBinding
 import com.android.anifind.domain.QueryMap
 import com.android.anifind.domain.model.Genre
 import com.android.anifind.extensions.*
+import com.android.anifind.presentation.adapter.AdapterType
+import com.android.anifind.presentation.adapter.AdapterType.DEFAULT
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -42,7 +44,7 @@ class FilterFragment : Fragment() {
     private lateinit var genres: List<Genre>
     private lateinit var genreBooleans: BooleanArray
 
-    private val animeAdapter = AnimePagingAdapter()
+    private val animeAdapter = AnimePagingAdapter(DEFAULT)
     private val viewModel by activityViewModels<OverviewViewModel>()
     private lateinit var binding: FragmentFilterBinding
 
@@ -68,9 +70,6 @@ class FilterFragment : Fragment() {
             binding.textFieldGenres.setText(getGenreText())
         })
         viewModel.filterAnimes.observe(viewLifecycleOwner, {
-            if (it == null) {
-                Toast.makeText(requireContext(), "Ошибка", Toast.LENGTH_SHORT).show()
-            }
             it?.subscribe { data ->
                 animeAdapter.submitData(lifecycle, data)
                 binding.recycler.smoothScrollToPosition(0)

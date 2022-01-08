@@ -11,6 +11,7 @@ import com.android.anifind.R
 import com.android.anifind.databinding.FragmentOverviewBinding
 import com.android.anifind.extensions.navigateToFilterFragment
 import com.android.anifind.extensions.navigateToSearchFragment
+import com.android.anifind.presentation.viewmodel.HomeViewModel
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
 
 class OverviewFragment : Fragment() {
@@ -28,7 +29,6 @@ class OverviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.apply {
             btnSearch.setOnClickListener { navigateToSearchFragment() }
             btnFilter.setOnClickListener {

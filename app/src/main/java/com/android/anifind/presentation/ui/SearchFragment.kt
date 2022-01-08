@@ -12,6 +12,8 @@ import com.android.anifind.Constants.DEBOUNCE_TIMEOUT
 import com.android.anifind.databinding.FragmentSearchBinding
 import com.android.anifind.extensions.init
 import com.android.anifind.extensions.navigateUp
+import com.android.anifind.presentation.adapter.AdapterType
+import com.android.anifind.presentation.adapter.AdapterType.DEFAULT
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.adapter.RequestAdapter
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
@@ -25,7 +27,7 @@ import java.util.concurrent.TimeUnit
 class SearchFragment : Fragment() {
 
     private val viewModel: OverviewViewModel by activityViewModels()
-    private val animeAdapter = AnimePagingAdapter()
+    private val animeAdapter = AnimePagingAdapter(DEFAULT)
     private val requestAdapter = RequestAdapter()
     private lateinit var binding: FragmentSearchBinding
 

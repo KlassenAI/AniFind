@@ -2,20 +2,24 @@ package com.android.anifind.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import com.android.anifind.Constants
-import com.android.anifind.R
 import com.android.anifind.databinding.ItemAnimeBinding
 import com.android.anifind.domain.model.Anime
-import com.bumptech.glide.Glide
+import com.android.anifind.extensions.hide
+import com.android.anifind.extensions.setImage
+import com.android.anifind.presentation.adapter.AdapterType.*
+import java.text.SimpleDateFormat
+import java.util.*
 
-class AnimePagingAdapter : PagingDataAdapter<Anime, AnimePagingAdapter.ViewHolder>(DiffCallback) {
+class AnimePagingAdapter(
+    private val type: AdapterType
+) : PagingDataAdapter<Anime, AnimePagingAdapter.ViewHolder>(DiffCallback) {
+
+    var onItemClick: ((Anime) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemBinding =
@@ -27,20 +31,49 @@ class AnimePagingAdapter : PagingDataAdapter<Anime, AnimePagingAdapter.ViewHolde
         getItem(position)?.let { holder.bind(it) }
     }
 
-    class ViewHolder(private val binding: ItemAnimeBinding) :
+    inner class ViewHolder(private val binding: ItemAnimeBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(anime: Anime) {
+            itemView.setOnClickListener { onItemClick?.invoke(anime) }
             binding.apply {
-                nameOriginal.text = anime.name
-                nameRussian.setOrHideText(anime.russian)
-                date.setOrHideText(anime.airedOn?.getYear())
-                rate.setOrHideNumber(anime.score)
                 poster.setImage(anime.image.original)
+                name.setNotEmptyText(anime.russian, anime.name)
+                when(type) {
+                    DEFAULT -> {
+                        date.setOrHideText(anime.airedOn?.getYear())
+                        episodes.hide()
+                        rate.setOrHideNumber(anime.score)
+                    }
+                    ANONS -> {
+                        date.setOrHideDate(anime.airedOn)
+                        episodes.hide()
+                        rate.hide()
+                    }
+                    ONGOING -> {
+                        date.hide()
+                        episodes.text = String.format("%s из %s эпизодов",
+                            anime.episodesAired.toString(), anime.episodes.toFormatString())
+                        rate.setOrHideNumber(anime.score)
+                    }
+                }
             }
         }
 
-        private fun getImageUrl(url: String) = Constants.IMAGE_URL + url
+        private fun TextView.setNotEmptyText(maybeEmptyText: String, notEmptyText: String) {
+            this.text = if (maybeEmptyText.isEmpty()) notEmptyText else maybeEmptyText
+        }
+
+        private fun TextView.setOrHideDate(date: String?) {
+            text = formatDate(date) ?: "Дата выхода неизвестна"
+        }
+
+        private fun formatDate(date: String?): String? {
+            if (date.isNullOrEmpty()) return null
+            val networkFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
+            val appFormatter = SimpleDateFormat("dd MMMM y", Locale.ROOT)
+            return appFormatter.format(networkFormatter.parse(date)!!)
+        }
 
         private fun TextView.setOrHideText(text: String?) {
             if (text.isNullOrEmpty()) {
@@ -60,19 +93,7 @@ class AnimePagingAdapter : PagingDataAdapter<Anime, AnimePagingAdapter.ViewHolde
             }
         }
 
-        private fun ImageView.setImage(url: String) {
-            Glide.with(this)
-                .load(getImageUrl(url))
-                .placeholder(CircularProgressDrawable(itemView.context).apply {
-                    strokeWidth = 5f
-                    centerRadius = 30f
-                    start()
-                })
-                .centerCrop()
-                .error(R.drawable.error_load)
-                .fallback(R.drawable.error_load)
-                .into(this)
-        }
+        private fun Int.toFormatString(): String = if (this == 0) "?" else this.toString()
     }
 
 

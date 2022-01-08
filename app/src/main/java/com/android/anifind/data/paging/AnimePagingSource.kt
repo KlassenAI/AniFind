@@ -1,5 +1,6 @@
 package com.android.anifind.data.paging
 
+import android.util.Log
 import androidx.paging.PagingState
 import androidx.paging.rxjava3.RxPagingSource
 import com.android.anifind.data.network.RetrofitService
@@ -32,6 +33,11 @@ class AnimePagingSource @Inject constructor(
         )
     }
 
-    override fun getRefreshKey(state: PagingState<Long, Anime>): Long? = null
+    override fun getRefreshKey(state: PagingState<Long, Anime>): Long? {
+        return state.anchorPosition?.let {
+            val anchorPage = state.closestPageToPosition(it)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+        }
+    }
 }
 

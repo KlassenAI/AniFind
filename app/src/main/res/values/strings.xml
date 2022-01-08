@@ -141,4 +141,11 @@
         <item>r_plus</item>
         <item>rx</item>
     </string-array>
+
+    <string name="cd_poster">Постер</string>
+    <string name="cd_btn_favorite">Кнопка для избранных аниме</string>
+    <string name="cd_btn_user_list">Кнопка для отслеживаемых аниме</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_dont_watch">Не смотрел</string>
 </resources>
