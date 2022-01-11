@@ -6,20 +6,23 @@ import android.widget.Filterable
 import android.widget.ListAdapter
 import com.google.android.material.textfield.TextInputLayout
 
+fun TextInputLayout.completeView() = (editText as? AutoCompleteTextView)
+fun TextInputLayout.adapter() = completeView()?.adapter
+
 fun <T> TextInputLayout.setAdapter(adapter: T) where T : ListAdapter?, T : Filterable? {
-    (editText as? AutoCompleteTextView)?.setAdapter(adapter)
+    completeView()?.setAdapter(adapter)
 }
 
 fun TextInputLayout.setText(value: String) {
-    (editText as? AutoCompleteTextView)?.setText(value, false)
+    completeView()?.setText(value, false)
 }
 
-fun <T> TextInputLayout.clear(adapter: T) where T : ListAdapter?, T : Filterable? {
-    setText(adapter?.getItem(0).toString())
+fun TextInputLayout.clear() {
+    setText(adapter()?.getItem(0).toString())
 }
 
 fun TextInputLayout.getParam(
     adapter: ArrayAdapter<String>, items: List<String?>
 ): String? {
-    return items[adapter.getPosition((editText as? AutoCompleteTextView)?.text.toString())]
+    return items[adapter.getPosition(completeView()?.text.toString())]
 }

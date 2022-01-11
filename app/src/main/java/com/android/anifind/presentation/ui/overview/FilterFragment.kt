@@ -6,166 +6,252 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.ArrayRes
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import com.android.anifind.Constants
 import com.android.anifind.R
 import com.android.anifind.databinding.FragmentFilterBinding
 import com.android.anifind.domain.model.QueryMap
 import com.android.anifind.domain.model.Genre
+import com.android.anifind.domain.model.MultiChoiceDialogType
+import com.android.anifind.domain.model.MultiChoiceDialogType.GENRE
+import com.android.anifind.domain.model.MultiChoiceDialogType.STUDIO
+import com.android.anifind.domain.model.Studio
 import com.android.anifind.extensions.*
 import com.android.anifind.presentation.adapter.AdapterType.DEFAULT
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
+import com.android.anifind.presentation.ui.dialog.MultiChoiceDialog
+import com.android.anifind.presentation.viewmodel.BookmarksViewModel
+import com.android.anifind.presentation.viewmodel.HomeViewModel
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputLayout
 
-class FilterFragment : Fragment() {
+class FilterFragment : Fragment(), MultiChoiceDialog.MultiChoiceDialogListener {
 
-    private lateinit var sortItems: List<String?>
-    private lateinit var sortAdapter: ArrayAdapter<String>
-    private lateinit var kindItems: List<String?>
-    private lateinit var kindAdapter: ArrayAdapter<String>
-    private lateinit var statusItems: List<String?>
-    private lateinit var statusAdapter: ArrayAdapter<String>
-    private lateinit var seasonItems: List<String?>
-    private lateinit var seasonAdapter: ArrayAdapter<String>
-    private lateinit var yearItems: List<String?>
-    private lateinit var yearAdapter: ArrayAdapter<String>
-    private lateinit var genres: List<Genre>
-    private lateinit var genreBooleans: BooleanArray
+    companion object {
+        const val GENRES = "Жанры"
+        const val STUDIOS = "Студии"
+    }
 
-    private val animeAdapter = AnimePagingAdapter(DEFAULT)
-    private val viewModel by activityViewModels<OverviewViewModel>()
+    private lateinit var orderField: Field
+    private lateinit var kindField: Field
+    private lateinit var typeField: Field
+    private lateinit var statusField: Field
+    private lateinit var seasonField: Field
+    private lateinit var scoreField: Field
+    private lateinit var durationField: Field
+    private lateinit var ratingField: Field
+    private lateinit var genreField: MultiChoiceField<Genre>
+    private lateinit var studioField: MultiChoiceField<Studio>
+    private val adapter = AnimePagingAdapter(DEFAULT)
+    private val bookmarksViewModel by activityViewModels<BookmarksViewModel>()
+    private val overviewViewModel by activityViewModels<OverviewViewModel>()
     private lateinit var binding: FragmentFilterBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, b: Bundle?): View {
         binding = FragmentFilterBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        initObservers()
         initFields()
+        initObservers()
         initClicks()
     }
 
     private fun initObservers() {
-        viewModel.genres.observe(viewLifecycleOwner, { genres = it })
-        viewModel.genreBooleans.observe(viewLifecycleOwner, { array ->
-            genreBooleans = array.copyOf()
-            binding.textFieldGenres.setText(getGenreText())
+        overviewViewModel.genres.observe(viewLifecycleOwner, { genreField.list = it })
+        overviewViewModel.genreBooleans.observe(viewLifecycleOwner,
+            { genreField.booleans = it.copyOf() })
+        overviewViewModel.studios.observe(viewLifecycleOwner, { studioField.list = it })
+        overviewViewModel.studiosBooleans.observe(
+            viewLifecycleOwner, { studioField.booleans = it.copyOf() })
+        overviewViewModel.filterAnimes.observe(viewLifecycleOwner, {
+            adapter.submitData(lifecycle, it)
         })
-        viewModel.filterAnimes.observe(viewLifecycleOwner, {
-            it?.subscribe { data ->
-                animeAdapter.submitData(lifecycle, data)
-                binding.recycler.smoothScrollToPosition(0)
-            }
-        })
-        viewModel.isFilterChanging.observe(viewLifecycleOwner, {
-            binding.filterForm.isVisible = it!!
-            binding.filterList.isVisible = !it
+        overviewViewModel.isFilterChanging.observe(viewLifecycleOwner, {
+            binding.layoutFilter.isVisible = it!!
+            binding.layoutList.isVisible = !it
         })
     }
 
     private fun initFields() {
-        val years = getYearList()
-
-        sortItems = getList(R.array.sort_data_items)
-        kindItems = getList(R.array.kind_data_items)
-        statusItems = getList(R.array.status_data_items)
-        seasonItems = getList(R.array.season_data_items)
-        yearItems = listOf(null) + years
-
-        sortAdapter = createAdapter(R.array.sort_ui_items)
-        kindAdapter = createAdapter(R.array.kind_ui_items)
-        statusAdapter = createAdapter(R.array.status_ui_items)
-        seasonAdapter = createAdapter(R.array.season_ui_items)
-        yearAdapter = createAdapter(listOf("Не важно") + years)
-
-        binding.textFieldSort.setAdapter(sortAdapter)
-        binding.textFieldKind.setAdapter(kindAdapter)
-        binding.textFieldStatus.setAdapter(statusAdapter)
-        binding.textFieldYear.setAdapter(yearAdapter)
-        binding.textFieldYear.editText?.addTextChangedListener {
-            binding.textFieldSeason.isEnabled = it.toString() != "Не важно"
-            if (it.toString() == "Не важно") binding.textFieldSeason.clear(seasonAdapter)
+        binding.run {
+            orderField = getField(R.array.order_params, R.array.order_items, fieldOrder)
+            kindField = getField(R.array.kind_params, R.array.kind_items, fieldKind)
+            typeField = getField(R.array.type_params, R.array.type_items, fieldType)
+            statusField = getField(R.array.status_params, R.array.status_items, fieldStatus)
+            seasonField = getField(R.array.season_params, R.array.season_items, fieldSeason)
+            scoreField = getField(R.array.score_params, R.array.score_items, fieldScore)
+            durationField = getField(R.array.duration_params, R.array.duration_items, fieldDuration)
+            ratingField = getField(R.array.rating_params, R.array.rating_items, fieldRating)
+            genreField = MultiChoiceField(fieldGenre, GENRE)
+            studioField = MultiChoiceField(fieldStudio, STUDIO)
+            recycler.init(adapter, progressBar, errorMessage, emptyMessage) {
+                bookmarksViewModel.setAnime(it)
+                findNavController().navigate(R.id.animeFragment)
+            }
         }
-        binding.textFieldSeason.setAdapter(seasonAdapter)
+    }
 
-        binding.recycler.init(animeAdapter)
+    private fun getField(
+        @ArrayRes paramsId: Int, @ArrayRes adapterId: Int, field: TextInputLayout
+    ): Field {
+        return Field(
+            listOf(null) + resources.getStringArray(paramsId).toList(),
+            ArrayAdapter(requireContext(), R.layout.item_list, resources.getStringArray(adapterId)),
+            field
+        )
     }
 
     private fun initClicks() {
         binding.apply {
-            textFieldGenres.editText?.setOnClickListener {
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Жанры")
-                    .setMultiChoiceItems(
-                        genres.map { it.russian }.toTypedArray(), genreBooleans
-                    ) { _, _, _ -> }
-                    .setPositiveButton("Ок") { _, _ -> viewModel.saveGenres(genreBooleans) }
-                    .setNegativeButton("Отмена") { _, _ -> viewModel.restoreGenres() }
-                    .setNeutralButton("Очистить") { _, _ -> viewModel.clearGenres() }
-                    .show()
+            fieldGenre.editText?.setOnClickListener {
+                showMultiChoiceDialog(GENRE, GENRES, genreField.items, genreField.booleans!!)
+            }
+            fieldStudio.editText?.setOnClickListener {
+                showMultiChoiceDialog(STUDIO, STUDIOS, studioField.items, studioField.booleans!!)
             }
             btnBack.setOnClickListener { navigateUp() }
+            btnBack2.setOnClickListener { navigateUp() }
             btnClear.setOnClickListener { clearFilters() }
-            btnApply.setOnClickListener { viewModel.requestFilterAnimes(getQueryMap()) }
-            btnFilter.setOnClickListener { viewModel.setFilterChanging() }
-            btnRandom.setOnClickListener { viewModel.requestFilterAnimes(getQueryMapWithRandom()) }
+            btnApply.setOnClickListener { overviewViewModel.requestFilterAnimes(getQueryMap()) }
+            btnFilter.setOnClickListener { overviewViewModel.setFilterChanging() }
+            btnRandom.setOnClickListener {
+                overviewViewModel.requestFilterAnimes(
+                    getQueryMapWithRandom()
+                )
+            }
+            btnRetry.setOnClickListener { adapter.retry() }
         }
+    }
+
+    private fun showMultiChoiceDialog(
+        type: MultiChoiceDialogType, title: String, items: Array<String>, booleans: BooleanArray
+    ) {
+        MultiChoiceDialog().apply {
+            arguments = bundleOf(
+                Constants.KEY_TYPE to type,
+                Constants.KEY_TITLE to title,
+                Constants.KEY_STRING_ARRAY to items,
+                Constants.KEY_BOOLEAN_ARRAY to booleans
+            )
+        }.show(childFragmentManager, "")
     }
 
     private fun clearFilters() {
         binding.apply {
-            textFieldSort.clear(sortAdapter)
-            textFieldKind.clear(kindAdapter)
-            textFieldStatus.clear(statusAdapter)
-            textFieldSeason.clear(seasonAdapter)
-            textFieldYear.clear(yearAdapter)
-            viewModel.clearGenres()
+            fieldOrder.clear()
+            fieldKind.clear()
+            fieldType.clear()
+            fieldStatus.clear()
+            fieldSeason.clear()
+            fieldScore.clear()
+            fieldDuration.clear()
+            fieldRating.clear()
+            overviewViewModel.clearGenres()
+            overviewViewModel.clearStudios()
         }
-    }
-
-    private fun getQueryMapBuilder() = QueryMap.Builder()
-        .order(binding.textFieldSort.getParam(sortAdapter, sortItems))
-        .kind(binding.textFieldKind.getParam(kindAdapter, kindItems))
-        .status(binding.textFieldStatus.getParam(statusAdapter, statusItems))
-        .season(binding.textFieldSeason.getParam(seasonAdapter, seasonItems))
-        .year(binding.textFieldYear.getParam(yearAdapter, yearItems))
-        .genre(getGenreParam())
-        .build()
-
-    private fun getGenreParam(): String? {
-        val param = genres.indices.filter { genreBooleans[it] }
-            .joinToString(";") { genres[it].id.toString() }
-        return if (param.isEmpty()) null else param
-    }
-
-    private fun getGenreText(): String {
-        val text = genres.indices.filter { genreBooleans[it] }
-            .joinToString(", ") { genres[it].russian }
-        return if (text.isEmpty()) { "Не важно" } else { text }
     }
 
     private fun getQueryMap() = getQueryMapBuilder().getHashMap()
 
     private fun getQueryMapWithRandom() = getQueryMapBuilder().getHashMapWithRandom()
 
-    private fun createAdapter(@ArrayRes id: Int): ArrayAdapter<String> {
-        return ArrayAdapter(requireContext(), R.layout.item_list, resources.getStringArray(id))
+    private fun getQueryMapBuilder() = QueryMap.Builder().order(orderField.param)
+        .kind(kindField.param).type(typeField.param).status(statusField.param)
+        .season(seasonField.param).score(scoreField.param).duration(durationField.param)
+        .rating(ratingField.param).genre(genreField.param).studio(studioField.param).build()
+
+    class Field(
+        private val params: List<String?>,
+        private val adapter: ArrayAdapter<String>,
+        private val textField: TextInputLayout
+    ) {
+        val param: String? get() = params[adapter.getPosition(textField.completeView()?.text.toString())]
+
+        init {
+            textField.setAdapter(adapter)
+        }
     }
 
-    private fun createAdapter(objects: List<String>): ArrayAdapter<String> {
-        return ArrayAdapter(requireContext(), R.layout.item_list, objects)
+    @Suppress("UNCHECKED_CAST")
+    class MultiChoiceField<T>(
+        private val textField: TextInputLayout,
+        private val type: MultiChoiceDialogType,
+        var list: List<T>? = null,
+    ) {
+        val items: Array<String>
+            get() {
+                return when (type) {
+                    GENRE -> (list as List<Genre>).map { it.russian }.toTypedArray()
+                    STUDIO -> (list as List<Studio>).map { it.name }.toTypedArray()
+                }
+            }
+        var booleans: BooleanArray? = null
+            set(value) {
+                field = value
+                setFieldText()
+            }
+        val param: String?
+            get() {
+                return when (type) {
+                    GENRE -> {
+                        val list = list as List<Genre>
+                        val p = list.indices.filter { booleans!![it] }
+                            .joinToString(";") { list[it].id.toString() }
+                        if (p.isEmpty()) null else p
+                    }
+                    STUDIO -> {
+                        val list = list as List<Studio>
+                        val p = list.indices.filter { booleans!![it] }
+                            .joinToString(";") { list[it].id.toString() }
+                        if (p.isEmpty()) null else p
+                    }
+                }
+            }
+
+        private fun setFieldText() {
+            when (type) {
+                GENRE -> {
+                    val list = list as List<Genre>
+                    val text = list.indices.filter { booleans!![it] }
+                        .joinToString(", ") { list[it].russian }
+                    textField.setText(if (text.isEmpty()) "Не важно" else text)
+                }
+                STUDIO -> {
+                    val list = list as List<Studio>
+                    val text = list.indices.filter { booleans!![it] }
+                        .joinToString(", ") { list[it].name }
+                    textField.setText(if (text.isEmpty()) "Не важно" else text)
+                }
+            }
+
+        }
     }
 
-    private fun getList(@ArrayRes id: Int): List<String?> {
-        return listOf(null) + resources.getStringArray(id).toList()
+    override fun positiveAction(type: MultiChoiceDialogType, booleans: BooleanArray) {
+        when (type) {
+            GENRE -> overviewViewModel.saveGenres(genreField.booleans!!)
+            STUDIO -> overviewViewModel.saveStudios(studioField.booleans!!)
+        }
+    }
+
+    override fun negativeAction(type: MultiChoiceDialogType) {
+        when (type) {
+            GENRE -> overviewViewModel.restoreGenres()
+            STUDIO -> overviewViewModel.restoreStudios()
+        }
+    }
+
+    override fun neutralAction(type: MultiChoiceDialogType) {
+        when (type) {
+            GENRE -> overviewViewModel.clearGenres()
+            STUDIO -> overviewViewModel.clearStudios()
+        }
     }
 }

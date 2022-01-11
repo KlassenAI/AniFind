@@ -10,7 +10,7 @@ class RequestAdapter(
     private var requests: ArrayList<String> = arrayListOf()
 ) : RecyclerView.Adapter<ViewHolder>() {
 
-    var onRequestClick: ((String) -> Unit)? = null
+    var onItemClick: ((String) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemBinding =
@@ -36,7 +36,7 @@ class RequestAdapter(
 
         fun bind(request: String) {
             binding.item.text = request
-            itemView.setOnClickListener { onRequestClick?.invoke(request) }
+            itemView.setOnClickListener { onItemClick?.invoke(request) }
         }
     }
 }

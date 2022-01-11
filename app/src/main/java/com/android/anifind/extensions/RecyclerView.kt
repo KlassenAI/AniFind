@@ -10,19 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.anifind.domain.model.Anime
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.adapter.LoadStateAdapter
-
-fun <VH : RecyclerView.ViewHolder> RecyclerView.init(paramAdapter: PagingDataAdapter<Anime, VH>) {
-    layoutManager = LinearLayoutManager(context)
-    addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-    adapter = paramAdapter.withLoadStateHeaderAndFooter(
-        LoadStateAdapter { paramAdapter.retry() }, LoadStateAdapter { paramAdapter.retry() }
-    )
-}
+import com.android.anifind.presentation.adapter.RequestAdapter
 
 fun RecyclerView.init(
     paramAdapter: AnimePagingAdapter,
     loadingView: View,
     errorView: View,
+    emptyView: View? = null,
     onItemClick: ((Anime) -> Unit)
 ) {
     layoutManager = LinearLayoutManager(context)
@@ -31,15 +25,26 @@ fun RecyclerView.init(
         LoadStateAdapter { paramAdapter.retry() }, LoadStateAdapter { paramAdapter.retry() }
     )
     paramAdapter.onItemClick = onItemClick
-    paramAdapter.addLoadStateListener {
-        loadingView.isVisible =  it.source.refresh is LoadState.Loading
-        this.isVisible =  it.source.refresh is LoadState.NotLoading
-        errorView.isVisible = it.source.refresh is LoadState.Error
+    paramAdapter.addLoadStateListener { loadState ->
+        loadingView.isVisible =  loadState.source.refresh is LoadState.Loading
+        this.isVisible =  loadState.source.refresh is LoadState.NotLoading
+        errorView.isVisible = loadState.source.refresh is LoadState.Error
+
+        emptyView?.let {
+            if (loadState.source.refresh is LoadState.NotLoading &&
+                    loadState.append.endOfPaginationReached && paramAdapter.itemCount < 1) {
+                this.isVisible = false
+                emptyView.isVisible = true
+            } else {
+                emptyView.isVisible = false
+            }
+        }
     }
 }
 
-fun <VH : RecyclerView.ViewHolder> RecyclerView.init(paramAdapter: RecyclerView.Adapter<VH>) {
+fun RecyclerView.init(paramAdapter: RequestAdapter, onItemClick: ((String) -> Unit)) {
     layoutManager = LinearLayoutManager(context)
     addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     adapter = paramAdapter
+    paramAdapter.onItemClick = onItemClick
 }

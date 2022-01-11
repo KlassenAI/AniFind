@@ -1,26 +1,6 @@
 <resources>
-    <string name="app_name">AniFind</string>
-    <string name="title_home">Главная</string>
-    <string name="title_overview">Обзор</string>
-    <string name="title_bookmarks">Закладки</string>
 
-    <string name="cd_backward">Назад</string>
-    <string name="text_filter">Фильтр</string>
-    <string name="btn_clear">Очистить</string>
-    <string name="btn_apply">Применить</string>
-    <string name="btn_shuffle">Рандом</string>
-    <string name="btn_change">Изменить</string>
-    <string name="hint_sort">Сортировка</string>
-    <string name="text_irrelevant">Не важно</string>
-    <string name="hint_kind">Категория</string>
-    <string name="hint_status">Статус</string>
-    <string name="hint_genres">Жанры</string>
-    <string name="hint_year">Год</string>
-    <string name="hint_season">Сезон</string>
-    <string name="hint_search">Поиск</string>
-    <string name="text_recent">Недавние</string>
-
-    <string-array name="sort_ui_items">
+    <string-array name="order_items">
         <item>Не важно</item>
         <item>По рейтингу</item>
         <item>По популярности</item>
@@ -28,14 +8,14 @@
         <item>Случайным образом</item>
     </string-array>
 
-    <string-array name="sort_data_items">
+    <string-array name="order_params">
         <item>ranked</item>
         <item>popularity</item>
         <item>aired_on</item>
         <item>random</item>
     </string-array>
 
-    <string-array name="kind_ui_items">
+    <string-array name="kind_items">
         <item>Не важно</item>
         <item>Сериал</item>
         <item>Фильм</item>
@@ -45,7 +25,7 @@
         <item>Музыка</item>
     </string-array>
 
-    <string-array name="kind_data_items">
+    <string-array name="kind_params">
         <item>tv</item>
         <item>movie</item>
         <item>ova</item>
@@ -54,76 +34,92 @@
         <item>music</item>
     </string-array>
 
-    <string-array name="episodes_ui_items">
+    <string-array name="type_items">
         <item>Не важно</item>
-        <item>Около 13</item>
-        <item>Около 24</item>
-        <item>Больше 48</item>
+        <item>Короткое (около 13)</item>
+        <item>Среднее (около 24)</item>
+        <item>Большое (больше 30)</item>
     </string-array>
 
-    <string-array name="episodes_data_items">
+    <string-array name="type_params">
         <item>tv_13</item>
         <item>tv_24</item>
         <item>tv_48</item>
     </string-array>
 
-    <string-array name="status_ui_items">
+    <string-array name="status_items">
         <item>Не важно</item>
         <item>Анонс</item>
         <item>Онкоинг</item>
         <item>Вышел</item>
     </string-array>
 
-    <string-array name="status_data_items">
+    <string-array name="status_params">
         <item>anons</item>
         <item>ongoing</item>
         <item>released</item>
     </string-array>
 
-    <string-array name="season_ui_items">
+    <string-array name="season_items">
         <item>Не важно</item>
-        <item>Зима</item>
-        <item>Весна</item>
-        <item>Лето</item>
-        <item>Осень</item>
+        <item>Весна 2022</item>
+        <item>Зима 2022</item>
+        <item>Осень 2021</item>
+        <item>Лето 2021</item>
+        <item>2022</item>
+        <item>2021</item>
+        <item>2019–2020</item>
+        <item>2014–2018</item>
+        <item>2000–2013</item>
+        <item>1990e годы</item>
+        <item>1980e годы</item>
+        <item>более старые</item>
     </string-array>
 
-    <string-array name="season_data_items">
-        <item>winter</item>
-        <item>spring</item>
-        <item>summer</item>
-        <item>autumn</item>
+    <string-array name="season_params">
+        <item>spring_2022</item>
+        <item>winter_2022</item>
+        <item>autumn_2021</item>
+        <item>summer_2021</item>
+        <item>2022</item>
+        <item>2021</item>
+        <item>2019_2020</item>
+        <item>2014_2018</item>
+        <item>2000_2013</item>
+        <item>199x</item>
+        <item>198x</item>
+        <item>ancient</item>
     </string-array>
 
-    <string-array name="score_ui_items">
+    <string-array name="score_items">
         <item>Не важно</item>
+        <item>9+</item>
+        <item>8+</item>
+        <item>7+</item>
+        <item>6+</item>
+    </string-array>
+
+    <string-array name="score_params">
         <item>9</item>
         <item>8</item>
         <item>7</item>
         <item>6</item>
     </string-array>
 
-    <string-array name="score_data_items">
-        <item>9</item>
-        <item>8</item>
-        <item>7</item>
-        <item>6</item>
-    </string-array>
-
-    <string-array name="duration_ui_items">
+    <string-array name="duration_items">
         <item>Не важно</item>
         <item>Меньше 10 минут</item>
         <item>Меньше 30 минут</item>
         <item>Больше 30 минут</item>
     </string-array>
 
-    <string-array name="duration_data_items">
+    <string-array name="duration_params">
         <item>S</item>
         <item>D</item>
         <item>F</item>
     </string-array>
 
-    <string-array name="rating_ui_items">
+    <string-array name="rating_items">
         <item>Не важно</item>
         <item>G (для всех возрастов)</item>
         <item>PG (для детей)</item>
@@ -133,7 +129,7 @@
         <item>RX (сексуальный контект)</item>
     </string-array>
 
-    <string-array name="rating_data_items">
+    <string-array name="rating_params">
         <item>g</item>
         <item>pg</item>
         <item>pg_13</item>
@@ -142,12 +138,44 @@
         <item>rx</item>
     </string-array>
 
+    <string name="app_name">AniFind</string>
+    <string name="title_home">Главная</string>
+    <string name="title_overview">Обзор</string>
+    <string name="title_bookmarks">Закладки</string>
+
+    <string name="cd_backward">Назад</string>
     <string name="cd_poster">Постер</string>
     <string name="cd_btn_favorite">Кнопка для избранных аниме</string>
     <string name="cd_btn_user_list">Кнопка для отслеживаемых аниме</string>
+
+    <string name="text_filter">Фильтр</string>
+    <string name="text_dont_watch">Не смотрел</string>
+    <string name="text_error_message">Произошла ошибка при загрузке данных</string>
+    <string name="text_empty_message">По данному запросу ничего не было найдено</string>
+    <string name="text_irrelevant">Не важно</string>
+    <string name="text_recent">Недавние</string>
+
+    <string name="btn_clear">Очистить</string>
+    <string name="btn_apply">Применить</string>
+    <string name="btn_shuffle">Рандом</string>
+    <string name="btn_change">Изменить</string>
+    <string name="btn_retry">Повторить</string>
+
+    <string name="hint_order">Сортировка</string>
+    <string name="hint_kind">Категория</string>
+    <string name="hint_status">Статус</string>
+    <string name="hint_genre">Жанры</string>
+    <string name="hint_year">Год</string>
+    <string name="hint_season">Сезон</string>
+    <string name="hint_search">Поиск</string>
+    <string name="hint_type">Тип</string>
+    <string name="hind_season">Сезон</string>
+    <string name="hint_score">Оценка</string>
+    <string name="hint_duration">Длительность</string>
+    <string name="hint_rating">Ограничение</string>
+    <string name="hint_studio">Студии</string>
+    <string name="text_search_by_filter">Поиск по фильтру</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="text_dont_watch">Не смотрел</string>
-    <string name="retry">Повторить</string>
-    <string name="text_there_was_mistake_in_loading">Произошла ошибка при загрузке данных</string>
+
 </resources>
