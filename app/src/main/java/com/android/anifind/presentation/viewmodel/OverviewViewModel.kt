@@ -22,8 +22,20 @@ class OverviewViewModel @Inject constructor(
     private val application: Application
 ) : ViewModel() {
 
+    private val isPopularRequestMade = MutableLiveData(false)
+    private val _popularAnimes = MutableLiveData<PagingData<Anime>>()
+    val popularAnimes: LiveData<PagingData<Anime>> get() = _popularAnimes
+
+    fun requestPopularAnimes() {
+        if (!isPopularRequestMade.value!!) {
+            isPopularRequestMade.postValue(true)
+            repository.requestPopularAnimes().cachedIn(viewModelScope)
+                .subscribe({ _popularAnimes.postValue(it) }, {})
+        }
+    }
+
     private val _searchAnimes = MutableLiveData<PagingData<Anime>>()
-    val searchAnimes: LiveData<PagingData<Anime>> = _searchAnimes
+    val searchAnimes: LiveData<PagingData<Anime>> get() = _searchAnimes
 
     fun requestAnimes(query: String) {
         repository.requestAnimes(query).cachedIn(viewModelScope)
@@ -31,7 +43,7 @@ class OverviewViewModel @Inject constructor(
     }
 
     private val _recentRequests = MutableLiveData(arrayListOf<String>())
-    val recentRequests: LiveData<ArrayList<String>> = _recentRequests
+    val recentRequests: LiveData<ArrayList<String>> get() = _recentRequests
 
     fun saveRequest(query: String) {
         _recentRequests.value?.remove(query)
@@ -43,9 +55,9 @@ class OverviewViewModel @Inject constructor(
     }
 
     private val _filterAnimes = MutableLiveData<PagingData<Anime>>()
-    val filterAnimes: LiveData<PagingData<Anime>> = _filterAnimes
+    val filterAnimes: LiveData<PagingData<Anime>> get() = _filterAnimes
     private val _isFilterChanging = MutableLiveData(true)
-    val isFilterChanging: LiveData<Boolean?> = _isFilterChanging
+    val isFilterChanging: LiveData<Boolean?> get() = _isFilterChanging
 
     fun requestFilterAnimes(map: HashMap<String, String>) {
         repository.requestFilterAnimes(map).cachedIn(viewModelScope)
@@ -58,7 +70,7 @@ class OverviewViewModel @Inject constructor(
     }
 
     private val _genres = MutableLiveData(getGenres())
-    val genres: LiveData<List<Genre>> = _genres
+    val genres: LiveData<List<Genre>> get() = _genres
     private val _genreBooleans = MutableLiveData(BooleanArray(genreSize))
     val genreBooleans: LiveData<BooleanArray> = _genreBooleans
     private val genreSize: Int get() = getGenres().size
@@ -75,7 +87,7 @@ class OverviewViewModel @Inject constructor(
     }
 
     private val _studios = MutableLiveData(getStudios())
-    val studios: LiveData<List<Studio>> = _studios
+    val studios: LiveData<List<Studio>> get() = _studios
     private val _studiosBooleans = MutableLiveData(BooleanArray(studioSize))
     val studiosBooleans: LiveData<BooleanArray> = _studiosBooleans
     private val studioSize: Int get() = getStudios().size
@@ -84,7 +96,7 @@ class OverviewViewModel @Inject constructor(
     fun restoreStudios() = _studiosBooleans.postValue(_studiosBooleans.value?.copyOf())
     fun clearStudios() = _studiosBooleans.postValue(BooleanArray(441))
 
-    private fun getStudios(): List<Studio>{
+    private fun getStudios(): List<Studio> {
         val studios: List<Studio> = Gson().fromJson(
             getJson(FILE_STUDIOS), object : TypeToken<List<Studio>>() {}.type
         )

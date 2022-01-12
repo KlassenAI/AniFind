@@ -8,16 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.android.anifind.databinding.FragmentAnimeBinding
-import com.android.anifind.presentation.viewmodel.BookmarksViewModel
+import com.android.anifind.presentation.viewmodel.AnimeViewModel
 
 class AnimeFragment : Fragment() {
 
-    private val viewModel by activityViewModels<BookmarksViewModel>()
+    private val viewModel: AnimeViewModel by activityViewModels()
     private lateinit var binding: FragmentAnimeBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, b: Bundle?): View {
         binding = FragmentAnimeBinding.inflate(inflater)
         return binding.root
     }

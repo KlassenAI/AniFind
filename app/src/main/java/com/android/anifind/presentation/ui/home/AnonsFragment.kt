@@ -14,19 +14,18 @@ import com.android.anifind.databinding.FragmentAnonsBinding
 import com.android.anifind.extensions.init
 import com.android.anifind.presentation.adapter.AdapterType.ANONS
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
+import com.android.anifind.presentation.viewmodel.AnimeViewModel
 import com.android.anifind.presentation.viewmodel.BookmarksViewModel
 import com.android.anifind.presentation.viewmodel.HomeViewModel
 
 class AnonsFragment : Fragment() {
 
     private val adapter = AnimePagingAdapter(ANONS)
-    private val homeViewModel by activityViewModels<HomeViewModel>()
-    private val bookmarksViewModel by activityViewModels<BookmarksViewModel>()
+    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val animeViewModel: AnimeViewModel by activityViewModels()
     private lateinit var binding: FragmentAnonsBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, b: Bundle?): View {
         binding = FragmentAnonsBinding.inflate(inflater)
         return binding.root
     }
@@ -34,10 +33,7 @@ class AnonsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            recycler.init(adapter, progressBar, errorMessage) {
-                bookmarksViewModel.setAnime(it)
-                findNavController().navigate(R.id.action_fragmentHome_to_animeFragment)
-            }
+            recycler.init(adapter, animeViewModel, progressBar, errorMessage)
             btnRetry.setOnClickListener { adapter.retry() }
         }
         homeViewModel.anons.observe(viewLifecycleOwner) { adapter.submitData(lifecycle, it) }

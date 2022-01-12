@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.android.anifind.databinding.FragmentOverviewBinding
-import com.android.anifind.extensions.navigateToFilterFragment
-import com.android.anifind.extensions.navigateToSearchFragment
+import com.android.anifind.extensions.navigateToFilter
+import com.android.anifind.extensions.navigateToPopular
+import com.android.anifind.extensions.navigateToSearch
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
 
 class OverviewFragment : Fragment() {
@@ -27,11 +28,12 @@ class OverviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            btnSearch.setOnClickListener { navigateToSearchFragment() }
+            btnSearch.setOnClickListener { navigateToSearch() }
             btnFilter.setOnClickListener {
                 viewModel.setFilterChanging()
-                navigateToFilterFragment()
+                navigateToFilter()
             }
+            btnPopular.setOnClickListener { navigateToPopular() }
         }
     }
 }

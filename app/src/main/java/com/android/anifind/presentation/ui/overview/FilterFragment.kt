@@ -24,6 +24,7 @@ import com.android.anifind.extensions.*
 import com.android.anifind.presentation.adapter.AdapterType.DEFAULT
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.ui.dialog.MultiChoiceDialog
+import com.android.anifind.presentation.viewmodel.AnimeViewModel
 import com.android.anifind.presentation.viewmodel.BookmarksViewModel
 import com.android.anifind.presentation.viewmodel.HomeViewModel
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
@@ -47,8 +48,8 @@ class FilterFragment : Fragment(), MultiChoiceDialog.MultiChoiceDialogListener {
     private lateinit var genreField: MultiChoiceField<Genre>
     private lateinit var studioField: MultiChoiceField<Studio>
     private val adapter = AnimePagingAdapter(DEFAULT)
-    private val bookmarksViewModel by activityViewModels<BookmarksViewModel>()
-    private val overviewViewModel by activityViewModels<OverviewViewModel>()
+    private val animeViewModel: AnimeViewModel by activityViewModels()
+    private val overviewViewModel: OverviewViewModel by activityViewModels()
     private lateinit var binding: FragmentFilterBinding
 
     override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, b: Bundle?): View {
@@ -91,10 +92,7 @@ class FilterFragment : Fragment(), MultiChoiceDialog.MultiChoiceDialogListener {
             ratingField = getField(R.array.rating_params, R.array.rating_items, fieldRating)
             genreField = MultiChoiceField(fieldGenre, GENRE)
             studioField = MultiChoiceField(fieldStudio, STUDIO)
-            recycler.init(adapter, progressBar, errorMessage, emptyMessage) {
-                bookmarksViewModel.setAnime(it)
-                findNavController().navigate(R.id.animeFragment)
-            }
+            recycler.init(adapter, animeViewModel, progressBar, errorMessage, emptyMessage)
         }
     }
 
@@ -119,14 +117,12 @@ class FilterFragment : Fragment(), MultiChoiceDialog.MultiChoiceDialogListener {
             btnBack.setOnClickListener { navigateUp() }
             btnBack2.setOnClickListener { navigateUp() }
             btnClear.setOnClickListener { clearFilters() }
+            btnRetry.setOnClickListener { adapter.retry() }
             btnApply.setOnClickListener { overviewViewModel.requestFilterAnimes(getQueryMap()) }
             btnFilter.setOnClickListener { overviewViewModel.setFilterChanging() }
             btnRandom.setOnClickListener {
-                overviewViewModel.requestFilterAnimes(
-                    getQueryMapWithRandom()
-                )
+                overviewViewModel.requestFilterAnimes(getQueryMapWithRandom())
             }
-            btnRetry.setOnClickListener { adapter.retry() }
         }
     }
 

@@ -27,6 +27,8 @@ class Repository @Inject constructor(private val service: RetrofitService) {
     fun requestAnonsAnimes() =
         getPager(hashMapOf("limit" to "20", "status" to "anons", "order" to "popularity"))
 
+    fun requestPopularAnimes() = getPager(hashMapOf("limit" to "20", "order" to "popularity"))
+
     private fun getPager(map: HashMap<String, String>): Observable<PagingData<Anime>> = Pager(
         config = PagingConfig(pageSize = 20),
         pagingSourceFactory = { AnimePagingSource(service, map) }

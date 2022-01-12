@@ -19,9 +19,7 @@ class HomeFragment : Fragment() {
     private val titles = arrayListOf("Недавние", "Онкоинги", "Анонсы")
     private lateinit var binding: FragmentHomeBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, b: Bundle?): View {
         binding = FragmentHomeBinding.inflate(inflater)
         return binding.root
     }

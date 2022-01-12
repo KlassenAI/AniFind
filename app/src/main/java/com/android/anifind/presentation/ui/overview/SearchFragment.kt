@@ -8,16 +8,14 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.android.anifind.Constants.DEBOUNCE_TIMEOUT
-import com.android.anifind.R
 import com.android.anifind.databinding.FragmentSearchBinding
 import com.android.anifind.extensions.init
 import com.android.anifind.extensions.navigateUp
 import com.android.anifind.presentation.adapter.AdapterType.DEFAULT
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.adapter.RequestAdapter
-import com.android.anifind.presentation.viewmodel.BookmarksViewModel
+import com.android.anifind.presentation.viewmodel.AnimeViewModel
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
 import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,10 +26,10 @@ import java.util.concurrent.TimeUnit
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
-    private val bookmarksViewModel: BookmarksViewModel by activityViewModels()
-    private val overviewViewModel: OverviewViewModel by activityViewModels()
-    private val animeAdapter = AnimePagingAdapter(DEFAULT)
     private val requestAdapter = RequestAdapter()
+    private val animeAdapter = AnimePagingAdapter(DEFAULT)
+    private val animeViewModel: AnimeViewModel by activityViewModels()
+    private val overviewViewModel: OverviewViewModel by activityViewModels()
     private lateinit var binding: FragmentSearchBinding
 
     override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, b: Bundle?): View {
@@ -56,10 +54,9 @@ class SearchFragment : Fragment() {
 
     private fun initRecyclers() {
         binding.apply {
-            recyclerAnimes.init(animeAdapter, progressBar, errorMessage, emptyMessage) {
-                bookmarksViewModel.setAnime(it)
-                findNavController().navigate(R.id.animeFragment)
-            }
+            recyclerAnimes.init(
+                animeAdapter, animeViewModel, progressBar, errorMessage, emptyMessage
+            )
             recyclerRequests.init(requestAdapter) { searchEditText.setText(it) }
         }
     }
@@ -92,13 +89,13 @@ class SearchFragment : Fragment() {
         binding.apply {
             btnBack.setOnClickListener { navigateUp() }
             btnClear.setOnClickListener { overviewViewModel.clearRecentRequests() }
+            btnRetry.setOnClickListener { animeAdapter.retry() }
             btnReset.setOnClickListener {
                 searchEditText.setText("")
                 layoutSearches.isVisible = true
                 layoutAnimes.isVisible = false
                 btnReset.isVisible = false
             }
-            btnRetry.setOnClickListener { animeAdapter.retry() }
         }
     }
 }
