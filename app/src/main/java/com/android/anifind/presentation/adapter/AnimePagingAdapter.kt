@@ -21,11 +21,9 @@ class AnimePagingAdapter(
 
     var onItemClick: ((Anime) -> Unit)? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemBinding =
-            ItemAnimeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(itemBinding)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
+        ItemAnimeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it) }
@@ -39,7 +37,7 @@ class AnimePagingAdapter(
             binding.apply {
                 poster.setImage(anime.image.original)
                 name.setNotEmptyText(anime.russian, anime.name)
-                when(type) {
+                when (type) {
                     DEFAULT -> {
                         date.setOrHideText(anime.airedOn?.getYear())
                         episodes.hide()
@@ -52,8 +50,10 @@ class AnimePagingAdapter(
                     }
                     ONGOING -> {
                         date.hide()
-                        episodes.text = String.format("%s из %s эпизодов",
-                            anime.episodesAired.toString(), anime.episodes.toFormatString())
+                        episodes.text = String.format(
+                            "%s из %s эпизодов",
+                            anime.episodesAired.toString(), anime.episodes.toFormatString()
+                        )
                         rate.setOrHideNumber(anime.score)
                     }
                 }
@@ -70,8 +70,8 @@ class AnimePagingAdapter(
 
         private fun formatDate(date: String?): String? {
             if (date.isNullOrEmpty()) return null
-            val networkFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
-            val appFormatter = SimpleDateFormat("dd MMMM y", Locale.ROOT)
+            val networkFormatter = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
+            val appFormatter = SimpleDateFormat("dd MMMM y", Locale("ru"))
             return appFormatter.format(networkFormatter.parse(date)!!)
         }
 
