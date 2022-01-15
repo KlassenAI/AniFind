@@ -16,9 +16,9 @@ import com.android.anifind.presentation.viewmodel.OverviewViewModel
 
 class PopularFragment : Fragment() {
 
-    private val adapter = AnimePagingAdapter(DEFAULT)
     private val animeViewModel: AnimeViewModel by activityViewModels()
     private val overviewViewModel: OverviewViewModel by activityViewModels()
+    private lateinit var adapter: AnimePagingAdapter
     private lateinit var binding: FragmentPopularBinding
 
     override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, b: Bundle?): View {
@@ -29,6 +29,7 @@ class PopularFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         overviewViewModel.requestPopularAnimes()
+        adapter = AnimePagingAdapter(DEFAULT, overviewViewModel, this)
         binding.apply {
             recycler.init(adapter, animeViewModel, progressBar, errorMessage)
             btnBack.setOnClickListener { navigateUp() }

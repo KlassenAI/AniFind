@@ -8,4 +8,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BookmarksViewModel @Inject constructor(
     private val repository: Repository
-) : ViewModel()
+) : BaseViewModel(repository) {
+
+    val animes = repository.getAnimes()
+}

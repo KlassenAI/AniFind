@@ -9,12 +9,16 @@ import androidx.paging.rxjava3.cachedIn
 import com.android.anifind.data.repository.Repository
 import com.android.anifind.domain.model.Anime
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: Repository
-) : ViewModel() {
+) : BaseViewModel(repository) {
 
     private val isRequestMade = MutableLiveData(false)
 

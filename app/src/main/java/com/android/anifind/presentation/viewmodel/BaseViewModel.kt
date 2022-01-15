@@ -9,12 +9,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class AnimeViewModel @Inject constructor(
+open class BaseViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
 
     private val _anime = MutableLiveData<Anime>()
     val anime: LiveData<Anime> get() = _anime
 
-    fun setAnime(anime: Anime) = _anime.postValue(anime)
+    fun saveAnime(anime: Anime) = _anime.postValue(anime)
+
+    fun getAnime(id: Int) = repository.getAnime(id)
+    fun insert(anime: Anime) = repository.insert(anime)
+    fun update(anime: Anime) = repository.update(anime)
+    fun delete(anime: Anime) = repository.delete(anime)
 }

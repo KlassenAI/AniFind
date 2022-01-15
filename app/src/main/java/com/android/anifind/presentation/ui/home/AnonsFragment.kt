@@ -12,6 +12,7 @@ import androidx.paging.LoadState
 import com.android.anifind.R
 import com.android.anifind.databinding.FragmentAnonsBinding
 import com.android.anifind.extensions.init
+import com.android.anifind.presentation.adapter.AdapterType
 import com.android.anifind.presentation.adapter.AdapterType.ANONS
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.viewmodel.AnimeViewModel
@@ -20,9 +21,9 @@ import com.android.anifind.presentation.viewmodel.HomeViewModel
 
 class AnonsFragment : Fragment() {
 
-    private val adapter = AnimePagingAdapter(ANONS)
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val animeViewModel: AnimeViewModel by activityViewModels()
+    private lateinit var adapter: AnimePagingAdapter
     private lateinit var binding: FragmentAnonsBinding
 
     override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, b: Bundle?): View {
@@ -32,6 +33,7 @@ class AnonsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = AnimePagingAdapter(AdapterType.DEFAULT, homeViewModel, this)
         binding.apply {
             recycler.init(adapter, animeViewModel, progressBar, errorMessage)
             btnRetry.setOnClickListener { adapter.retry() }

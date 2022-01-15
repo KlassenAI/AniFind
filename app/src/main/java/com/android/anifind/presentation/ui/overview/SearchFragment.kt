@@ -27,9 +27,9 @@ import java.util.concurrent.TimeUnit
 class SearchFragment : Fragment() {
 
     private val requestAdapter = RequestAdapter()
-    private val animeAdapter = AnimePagingAdapter(DEFAULT)
     private val animeViewModel: AnimeViewModel by activityViewModels()
     private val overviewViewModel: OverviewViewModel by activityViewModels()
+    private lateinit var animeAdapter: AnimePagingAdapter
     private lateinit var binding: FragmentSearchBinding
 
     override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, b: Bundle?): View {
@@ -39,6 +39,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        animeAdapter = AnimePagingAdapter(DEFAULT, overviewViewModel, this)
         initRecyclers()
         initObservers()
         initEditText()

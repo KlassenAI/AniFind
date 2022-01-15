@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.anifind.R
+import com.android.anifind.presentation.adapter.AnimeAdapter
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.adapter.LoadStateAdapter
 import com.android.anifind.presentation.adapter.RequestAdapter
@@ -25,10 +26,6 @@ fun RecyclerView.init(
     adapter = paramAdapter.withLoadStateHeaderAndFooter(
         LoadStateAdapter { paramAdapter.retry() }, LoadStateAdapter { paramAdapter.retry() }
     )
-    paramAdapter.onItemClick = {
-        viewModel.setAnime(it)
-        navigateToAnime()
-    }
     paramAdapter.addLoadStateListener { loadState ->
         loadingView.isVisible =  loadState.source.refresh is LoadState.Loading
         this.isVisible =  loadState.source.refresh is LoadState.NotLoading
@@ -51,4 +48,10 @@ fun RecyclerView.init(paramAdapter: RequestAdapter, onItemClick: ((String) -> Un
     addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     adapter = paramAdapter
     paramAdapter.onItemClick = onItemClick
+}
+
+fun RecyclerView.init(paramAdapter: AnimeAdapter) {
+    layoutManager = LinearLayoutManager(context)
+    addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+    adapter = paramAdapter
 }

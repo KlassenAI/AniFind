@@ -69,12 +69,12 @@
         android:contentDescription="@string/cd_btn_favorite"
         android:padding="8dp"
         android:src="@drawable/ic_bookmark_border"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_user_list"
-        app:layout_constraintEnd_toStartOf="@+id/btn_user_list"
-        app:layout_constraintTop_toTopOf="@+id/btn_user_list" />
+        app:layout_constraintBottom_toBottomOf="@+id/btn_status"
+        app:layout_constraintEnd_toStartOf="@+id/btn_status"
+        app:layout_constraintTop_toTopOf="@+id/btn_status" />
 
     <ImageButton
-        android:id="@+id/btn_user_list"
+        android:id="@+id/btn_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"

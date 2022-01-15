@@ -1,6 +1,7 @@
 package com.android.anifind.presentation.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +16,9 @@ import com.android.anifind.presentation.viewmodel.HomeViewModel
 
 class LatestFragment : Fragment() {
 
-    private val adapter = AnimePagingAdapter(DEFAULT)
     private val homeViewModel: HomeViewModel by activityViewModels()
     private val animeViewModel: AnimeViewModel by activityViewModels()
+    private lateinit var adapter: AnimePagingAdapter
     private lateinit var binding: FragmentLatestBinding
 
     override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, b: Bundle?): View {
@@ -27,6 +28,7 @@ class LatestFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = AnimePagingAdapter(DEFAULT, homeViewModel, this)
         binding.apply {
             recycler.init(adapter, animeViewModel, progressBar, errorMessage)
             btnRetry.setOnClickListener { adapter.retry() }

@@ -47,9 +47,9 @@ class FilterFragment : Fragment(), MultiChoiceDialog.MultiChoiceDialogListener {
     private lateinit var ratingField: Field
     private lateinit var genreField: MultiChoiceField<Genre>
     private lateinit var studioField: MultiChoiceField<Studio>
-    private val adapter = AnimePagingAdapter(DEFAULT)
     private val animeViewModel: AnimeViewModel by activityViewModels()
     private val overviewViewModel: OverviewViewModel by activityViewModels()
+    private lateinit var adapter: AnimePagingAdapter
     private lateinit var binding: FragmentFilterBinding
 
     override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, b: Bundle?): View {
@@ -59,6 +59,7 @@ class FilterFragment : Fragment(), MultiChoiceDialog.MultiChoiceDialogListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = AnimePagingAdapter(DEFAULT, overviewViewModel, this)
         initFields()
         initObservers()
         initClicks()

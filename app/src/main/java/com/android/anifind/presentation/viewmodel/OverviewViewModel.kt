@@ -20,7 +20,7 @@ import kotlin.collections.HashMap
 class OverviewViewModel @Inject constructor(
     private val repository: Repository,
     private val application: Application
-) : ViewModel() {
+) : BaseViewModel(repository) {
 
     private val isPopularRequestMade = MutableLiveData(false)
     private val _popularAnimes = MutableLiveData<PagingData<Anime>>()
