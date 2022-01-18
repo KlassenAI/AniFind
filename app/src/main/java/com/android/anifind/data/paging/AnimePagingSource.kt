@@ -12,14 +12,14 @@ import javax.inject.Singleton
 
 @Singleton
 class AnimePagingSource @Inject constructor(
-    private val repository: Repository,
+    private val service: RetrofitService,
     private val map: HashMap<String, String>
 ) : RxPagingSource<Long, Anime>() {
 
     override fun loadSingle(params: LoadParams<Long>): Single<LoadResult<Long, Anime>> {
         val page = params.key ?: 1
         map["page"] = page.toString()
-        return repository.requestAnime(map)
+        return service.requestAnimes(map)
             .subscribeOn(Schedulers.io())
             .map { toLoadResult(it, page) }
             .onErrorReturn { LoadResult.Error(it) }

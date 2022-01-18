@@ -24,16 +24,11 @@ class LoadStateAdapter(private val retry: () -> Unit) : LoadStateAdapter<LoadSta
         private val binding: LoadStateFooterBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.btnRetry.setOnClickListener { retry.invoke() }
-        }
-
-        fun bind(state: LoadState) {
-            binding.apply {
-                progressBar.isVisible = state is LoadState.Loading
-                textView.isVisible = state !is LoadState.Loading
-                btnRetry.isVisible = state !is LoadState.Loading
-            }
+        fun bind(state: LoadState) = with(binding) {
+            progressBar.isVisible = state is LoadState.Loading
+            textView.isVisible = state !is LoadState.Loading
+            btnRetry.isVisible = state !is LoadState.Loading
+            btnRetry.setOnClickListener { retry.invoke() }
         }
     }
 }

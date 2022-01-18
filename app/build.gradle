@@ -57,6 +57,7 @@ dependencies {
     implementation "androidx.room:room-runtime:2.4.1"
     implementation "androidx.room:room-rxjava3:2.4.1"
     kapt "androidx.room:room-compiler:2.4.1"
+    kapt "android.arch.persistence.room:compiler:2.4.1"
 
     // Networking
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -72,6 +73,9 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.0-alpha01'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.0-alpha01'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    // View Binding
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.3'
 
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'

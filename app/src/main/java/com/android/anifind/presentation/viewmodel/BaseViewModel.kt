@@ -13,11 +13,14 @@ open class BaseViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
 
+    val animes = repository.getAnimes()
+
     private val _anime = MutableLiveData<Anime>()
     val anime: LiveData<Anime> get() = _anime
 
     fun saveAnime(anime: Anime) = _anime.postValue(anime)
 
+    fun getIsFavorite(id: Int) = repository.getIsFavorite(id)
     fun getAnime(id: Int) = repository.getAnime(id)
     fun insert(anime: Anime) = repository.insert(anime)
     fun update(anime: Anime) = repository.update(anime)

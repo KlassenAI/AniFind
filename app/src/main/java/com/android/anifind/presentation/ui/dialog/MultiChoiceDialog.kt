@@ -5,20 +5,19 @@ import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import com.android.anifind.Constants
-import com.android.anifind.domain.model.MultiChoiceDialogType
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MultiChoiceDialog: DialogFragment() {
 
-    private lateinit var listener: MultiChoiceDialogListener
+    private lateinit var listener: Listener
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        listener = parentFragment as MultiChoiceDialogListener
+        listener = parentFragment as Listener
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val type = arguments?.getSerializable(Constants.KEY_TYPE) as MultiChoiceDialogType
+        val type = arguments?.getSerializable(Constants.KEY_TYPE) as Type
         val title = arguments?.getString(Constants.KEY_TITLE)!!
         val strings = arguments?.getStringArray(Constants.KEY_STRING_ARRAY)!!
         val booleans = arguments?.getBooleanArray(Constants.KEY_BOOLEAN_ARRAY)!!
@@ -31,9 +30,14 @@ class MultiChoiceDialog: DialogFragment() {
             .create()
     }
 
-    interface MultiChoiceDialogListener {
-        fun positiveAction(type: MultiChoiceDialogType, booleans: BooleanArray)
-        fun negativeAction(type: MultiChoiceDialogType)
-        fun neutralAction(type: MultiChoiceDialogType)
+    enum class Type {
+        GENRE,
+        STUDIO
+    }
+
+    interface Listener {
+        fun positiveAction(type: Type, booleans: BooleanArray)
+        fun negativeAction(type: Type)
+        fun neutralAction(type: Type)
     }
 }

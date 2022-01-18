@@ -7,7 +7,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Database(
     entities = [Anime::class],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 @TypeConverters(
     GenreConverter::class,

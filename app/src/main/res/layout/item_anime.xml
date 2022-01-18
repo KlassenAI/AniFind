@@ -12,7 +12,6 @@
         android:layout_margin="8dp"
         android:contentDescription="@string/cd_poster"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_launcher_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -68,7 +67,6 @@
         android:background="@drawable/ripple_effect"
         android:contentDescription="@string/cd_btn_favorite"
         android:padding="8dp"
-        android:src="@drawable/ic_bookmark_border"
         app:layout_constraintBottom_toBottomOf="@+id/btn_status"
         app:layout_constraintEnd_toStartOf="@+id/btn_status"
         app:layout_constraintTop_toTopOf="@+id/btn_status" />
@@ -81,7 +79,6 @@
         android:background="@drawable/ripple_effect"
         android:contentDescription="@string/cd_btn_user_list"
         android:padding="8dp"
-        android:src="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
