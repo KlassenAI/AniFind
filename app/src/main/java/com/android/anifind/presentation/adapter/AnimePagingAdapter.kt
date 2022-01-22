@@ -111,6 +111,7 @@ class AnimePagingAdapter(
         }
 
         fun bind(entity: AnimeEntity, position: Int) = with(binding) {
+            Log.d("entity", entity.toString())
             notifyFavoriteParamChanged(entity)
             notifyStatusParamChanged(entity)
             poster.setImage(entity.imageUrl)

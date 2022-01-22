@@ -68,7 +68,7 @@ class Repository @Inject constructor(
     }
 
     private fun getCurrentDate(): String {
-        return SimpleDateFormat("yyyy MM dd HH:mm:ss", Locale("ru")).apply {
+        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale("ru")).apply {
             timeZone = TimeZone.getDefault()
         }.format(Date())
     }
