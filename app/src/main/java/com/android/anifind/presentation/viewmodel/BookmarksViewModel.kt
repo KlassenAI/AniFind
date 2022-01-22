@@ -5,10 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class BookmarksViewModel @Inject constructor(
-    private val repository: Repository
-) : BaseViewModel(repository) {
-
+class BookmarksViewModel @Inject constructor(repository: Repository) : BaseViewModel(repository) {
     val favoriteAnimes = repository.getFavoriteAnimes()
     val completedAnimes = repository.getCompletedAnimes()
     val droppedAnimes = repository.getDroppedAnimes()

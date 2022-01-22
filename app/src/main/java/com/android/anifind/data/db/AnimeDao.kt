@@ -2,7 +2,7 @@ package com.android.anifind.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.android.anifind.domain.model.Anime
+import com.android.anifind.domain.model.AnimeEntity
 import com.android.anifind.domain.model.WatchStatus
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
@@ -10,30 +10,24 @@ import io.reactivex.rxjava3.core.Flowable
 @Dao
 interface AnimeDao {
 
-    @Query("SELECT is_favorite FROM animes WHERE id = :id")
-    fun getIsFavorite(id: Int): Flowable<Boolean?>
-
     @Query("SELECT * FROM animes")
-    fun getAnimes(): LiveData<List<Anime>>
+    fun getAnimes(): LiveData<List<AnimeEntity>>
 
     @Query("SELECT * FROM animes WHERE is_favorite=:favorite")
-    fun getFavoriteAnimes(favorite: Boolean = true): LiveData<List<Anime>>
+    fun getFavoriteAnimes(favorite: Boolean = true): LiveData<List<AnimeEntity>>
 
     @Query("SELECT * FROM animes WHERE watch_status=:status")
-    fun getAnimesWithStatus(status: WatchStatus): LiveData<List<Anime>>
+    fun getAnimesByStatus(status: WatchStatus): LiveData<List<AnimeEntity>>
 
     @Query("SELECT * FROM animes WHERE id=:id")
-    fun getAnime(id: Int): Flowable<Anime?>
-
-    @Query("SELECT * FROM animes WHERE id=:id")
-    fun getAnimeById(id: Int): Anime?
+    fun getAnime(id: Int): Flowable<AnimeEntity?>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(anime: Anime): Completable
+    fun insert(animeEntity: AnimeEntity): Completable
 
     @Update
-    fun update(anime: Anime): Completable
+    fun update(animeEntity: AnimeEntity): Completable
 
     @Delete
-    fun delete(anime: Anime): Completable
+    fun delete(animeEntity: AnimeEntity): Completable
 }

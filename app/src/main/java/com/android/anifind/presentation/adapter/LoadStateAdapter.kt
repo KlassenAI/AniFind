@@ -7,20 +7,17 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.anifind.databinding.LoadStateFooterBinding
-import com.android.anifind.presentation.adapter.LoadStateAdapter.LoadStateViewHolder
+import com.android.anifind.presentation.adapter.LoadStateAdapter.ViewHolder
 
-class LoadStateAdapter(private val retry: () -> Unit) : LoadStateAdapter<LoadStateViewHolder>() {
+class LoadStateAdapter(private val retry: () -> Unit) : LoadStateAdapter<ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateViewHolder {
-        val binding = LoadStateFooterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return LoadStateViewHolder(binding)
-    }
+    override fun onBindViewHolder(holder: ViewHolder, loadState: LoadState) = holder.bind(loadState)
 
-    override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) {
-        holder.bind(loadState)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState) = ViewHolder(
+        LoadStateFooterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    )
 
-    inner class LoadStateViewHolder(
+    inner class ViewHolder(
         private val binding: LoadStateFooterBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 

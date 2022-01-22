@@ -18,11 +18,11 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context) = AppDatabase.getDb(context)
+    fun provideDatabase(@ApplicationContext context: Context) = AppDatabase.getFromContext(context)
 
     @Provides
     @Singleton
-    fun provideAnimeDao(appDatabase: AppDatabase) = appDatabase.animeDao()
+    fun provideDao(appDatabase: AppDatabase) = appDatabase.dao()
 
     @Provides
     @Singleton

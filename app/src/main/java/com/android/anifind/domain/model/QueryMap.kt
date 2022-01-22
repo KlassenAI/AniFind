@@ -1,7 +1,5 @@
 package com.android.anifind.domain.model
 
-import android.util.Log
-
 class QueryMap(builder: Builder) {
     var limit: String = "20"
     var order: String? = null
@@ -28,7 +26,6 @@ class QueryMap(builder: Builder) {
         rating?.let { hashMap["rating"] = it }
         genre?.let { hashMap["genre"] = it }
         studio?.let { hashMap["studio"] = it }
-        Log.d("queryMap", hashMap.toString())
         return hashMap
     }
 

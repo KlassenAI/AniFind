@@ -2,11 +2,11 @@ package com.android.anifind.data.db
 
 import android.content.Context
 import androidx.room.*
-import com.android.anifind.domain.model.Anime
+import com.android.anifind.domain.model.AnimeEntity
 import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Database(
-    entities = [Anime::class],
+    entities = [AnimeEntity::class],
     version = 1,
     exportSchema = false
 )
@@ -17,10 +17,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
     WatchStatusConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun animeDao(): AnimeDao
-
+    abstract fun dao(): AnimeDao
+    
     companion object {
-        fun getDb(@ApplicationContext context: Context): AppDatabase =
-            Room.databaseBuilder(context, AppDatabase::class.java, "animes").build()
+        fun getFromContext(@ApplicationContext context: Context): AppDatabase = Room.databaseBuilder(
+            context, AppDatabase::class.java, "animes"
+        ).build()
     }
 }

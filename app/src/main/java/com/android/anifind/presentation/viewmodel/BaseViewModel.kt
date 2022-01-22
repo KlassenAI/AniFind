@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.anifind.data.repository.Repository
-import com.android.anifind.domain.model.Anime
+import com.android.anifind.domain.model.AnimeEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -15,14 +15,15 @@ open class BaseViewModel @Inject constructor(
 
     val animes = repository.getAnimes()
 
-    private val _anime = MutableLiveData<Anime>()
-    val anime: LiveData<Anime> get() = _anime
+    private val _anime = MutableLiveData<AnimeEntity>()
+    val anime: LiveData<AnimeEntity> get() = _anime
 
-    fun saveAnime(anime: Anime) = _anime.postValue(anime)
+    fun saveAnime(anime: AnimeEntity) = _anime.postValue(anime)
 
-    fun getIsFavorite(id: Int) = repository.getIsFavorite(id)
+    fun requestAnimeInfo(id: Int) = repository.requestAnimeInfo(id)
+
     fun getAnime(id: Int) = repository.getAnime(id)
-    fun insert(anime: Anime) = repository.insert(anime)
-    fun update(anime: Anime) = repository.update(anime)
-    fun delete(anime: Anime) = repository.delete(anime)
+    fun insert(animeEntity: AnimeEntity) = repository.insert(animeEntity)
+    fun update(animeEntity: AnimeEntity) = repository.update(animeEntity)
+    fun delete(animeEntity: AnimeEntity) = repository.delete(animeEntity)
 }
