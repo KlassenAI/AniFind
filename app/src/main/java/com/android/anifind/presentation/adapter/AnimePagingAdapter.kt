@@ -51,12 +51,14 @@ class AnimePagingAdapter(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 if (it == null) return@subscribe
+                anime.addDate = it.addDate
+                anime.updateDate = it.updateDate
+                if (it.info == null) loadAnimeInfo(anime)
+                else anime.info = it.info
                 anime.isFavorite = it.isFavorite
                 notifyItemChanged(position, FAVORITE)
                 anime.watchStatus = it.watchStatus
                 notifyItemChanged(position, STATUS)
-                if (it.info == null) loadAnimeInfo(anime)
-                else anime.info = it.info
             }
     }
 
