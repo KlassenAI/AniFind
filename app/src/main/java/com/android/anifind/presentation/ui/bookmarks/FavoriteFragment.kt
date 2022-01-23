@@ -21,10 +21,10 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = AnimeAdapter(viewModel)
+        adapter = AnimeAdapter(viewModel, this@FavoriteFragment)
         recycler.init(adapter)
         viewModel.favoriteAnimes.observe(viewLifecycleOwner) {
-            adapter.animes = it
+            adapter.submitList(it)
             progressBar.conceal()
             emptyMessage.isVisible = it.isEmpty()
             recycler.isVisible = it.isNotEmpty()

@@ -21,10 +21,10 @@ class CompletedFragment : Fragment(R.layout.fragment_completed) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = AnimeAdapter(viewModel)
+        adapter = AnimeAdapter(viewModel, this@CompletedFragment)
         recycler.init(adapter)
         viewModel.completedAnimes.observe(viewLifecycleOwner) {
-            adapter.animes = it
+            adapter.submitList(it)
             progressBar.conceal()
             emptyMessage.isVisible = it.isEmpty()
             recycler.isVisible = it.isNotEmpty()

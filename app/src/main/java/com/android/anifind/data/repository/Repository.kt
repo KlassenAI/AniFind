@@ -3,6 +3,8 @@ package com.android.anifind.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.rxjava3.observable
+import com.android.anifind.Constants.DATE_PATTERN
+import com.android.anifind.Constants.LANG_RU
 import com.android.anifind.data.db.AnimeDao
 import com.android.anifind.data.network.RetrofitService
 import com.android.anifind.data.paging.AnimePagingSource
@@ -41,6 +43,7 @@ class Repository @Inject constructor(
         PagingConfig(20), null, { AnimePagingSource(service, map) }
     ).observable
 
+    fun getAnime(id: Int) = dao.getAnime(id)
     fun getAnimes() = dao.getAnimes()
     fun getFavoriteAnimes() = dao.getFavoriteAnimes()
     fun getCompletedAnimes() = dao.getAnimesByStatus(COMPLETED)
@@ -49,27 +52,24 @@ class Repository @Inject constructor(
     fun getPlannedAnimes() = dao.getAnimesByStatus(PLANNED)
     fun getWatchingAnimes() = dao.getAnimesByStatus(WATCHING)
 
-    fun getAnime(id: Int) = dao.getAnime(id)
     fun insert(animeEntity: AnimeEntity) {
         val date = getCurrentDate()
-        animeEntity.addDate = date
+        if (animeEntity.addDate.isEmpty()) animeEntity.addDate = date
         animeEntity.updateDate = date
-        dao.insert(animeEntity).sub()
+        dao.insert(animeEntity).subscribeOn(Schedulers.io()).subscribe()
     }
 
     fun update(animeEntity: AnimeEntity) {
         val date = getCurrentDate()
         animeEntity.updateDate = date
-        dao.update(animeEntity).sub()
-    }
-    fun delete(animeEntity: AnimeEntity) = dao.delete(animeEntity).sub()
-    private fun Completable.sub() {
-        subscribeOn(Schedulers.io()).subscribe()
+        dao.update(animeEntity).subscribeOn(Schedulers.io()).subscribe()
     }
 
-    private fun getCurrentDate(): String {
-        return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale("ru")).apply {
-            timeZone = TimeZone.getDefault()
-        }.format(Date())
+    fun delete(animeEntity: AnimeEntity) {
+        dao.delete(animeEntity).subscribeOn(Schedulers.io()).subscribe()
     }
+
+    private fun getCurrentDate() = SimpleDateFormat(DATE_PATTERN, Locale(LANG_RU)).apply {
+        timeZone = TimeZone.getDefault()
+    }.format(Date())
 }

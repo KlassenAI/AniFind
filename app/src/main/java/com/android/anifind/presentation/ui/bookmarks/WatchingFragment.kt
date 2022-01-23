@@ -21,10 +21,10 @@ class WatchingFragment : Fragment(R.layout.fragment_watching) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = AnimeAdapter(viewModel)
+        adapter = AnimeAdapter(viewModel, this@WatchingFragment)
         recycler.init(adapter)
         viewModel.watchingAnimes.observe(viewLifecycleOwner) {
-            adapter.animes = it
+            adapter.submitList(it)
             progressBar.conceal()
             emptyMessage.isVisible = it.isEmpty()
             recycler.isVisible = it.isNotEmpty()
