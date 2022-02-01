@@ -1,7 +1,5 @@
 package com.android.anifind.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.android.anifind.data.repository.Repository
 import com.android.anifind.domain.model.AnimeEntity
@@ -12,13 +10,6 @@ import javax.inject.Inject
 open class BaseViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
-
-    val animes = repository.getAnimes()
-
-    private val _anime = MutableLiveData<AnimeEntity>()
-    val anime: LiveData<AnimeEntity> get() = _anime
-
-    fun saveAnime(anime: AnimeEntity) = _anime.postValue(anime)
 
     fun requestAnimeInfo(id: Int) = repository.requestAnimeInfo(id)
 

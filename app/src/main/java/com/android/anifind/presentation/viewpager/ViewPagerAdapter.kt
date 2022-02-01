@@ -7,7 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.android.anifind.presentation.ui.bookmarks.*
 import com.android.anifind.presentation.ui.home.AnonsFragment
 import com.android.anifind.presentation.ui.home.LatestFragment
-import com.android.anifind.presentation.ui.home.OnGoingFragment
+import com.android.anifind.presentation.ui.home.OngoingFragment
 import com.android.anifind.presentation.viewpager.ViewPagerAdapter.Type.BOOKMARKS
 import com.android.anifind.presentation.viewpager.ViewPagerAdapter.Type.HOME
 
@@ -20,7 +20,7 @@ class ViewPagerAdapter(
     override fun createFragment(position: Int): Fragment {
         return when(type) {
             HOME -> when(position) {
-                1 -> OnGoingFragment()
+                1 -> OngoingFragment()
                 2 -> AnonsFragment()
                 else -> LatestFragment()
             }

@@ -7,6 +7,7 @@ import androidx.paging.rxjava3.cachedIn
 import com.android.anifind.Constants.FILE_GENRES
 import com.android.anifind.Constants.FILE_STUDIOS
 import com.android.anifind.data.repository.Repository
+import com.android.anifind.domain.model.Anime
 import com.android.anifind.domain.model.AnimeEntity
 import com.android.anifind.domain.model.Genre
 import com.android.anifind.domain.model.Studio
@@ -22,20 +23,13 @@ class OverviewViewModel @Inject constructor(
     private val application: Application
 ) : BaseViewModel(repository) {
 
-    private val isPopularRequestMade = MutableLiveData(false)
-    private val _popularAnimes = MutableLiveData<PagingData<AnimeEntity>>()
-    val popularAnimes: LiveData<PagingData<AnimeEntity>> get() = _popularAnimes
+    private val _recentAnimes = repository.getRecentAnime()
+    val recentAnimes: LiveData<List<AnimeEntity>> get() = _recentAnimes
 
-    fun requestPopularAnimes() {
-        if (!isPopularRequestMade.value!!) {
-            isPopularRequestMade.postValue(true)
-            repository.requestPopularAnimes().cachedIn(viewModelScope)
-                .subscribe({ _popularAnimes.postValue(it) }, {})
-        }
-    }
+    fun deleteRecentAnime() = repository.deleteRecentAnime()
 
-    private val _searchAnimes = MutableLiveData<PagingData<AnimeEntity>>()
-    val searchAnimes: LiveData<PagingData<AnimeEntity>> get() = _searchAnimes
+    private val _searchAnimes = MutableLiveData<PagingData<Anime>>()
+    val searchAnimes: LiveData<PagingData<Anime>> get() = _searchAnimes
 
     fun requestAnimes(query: String) {
         repository.requestAnimes(query).cachedIn(viewModelScope)
@@ -54,8 +48,8 @@ class OverviewViewModel @Inject constructor(
         _recentRequests.postValue(arrayListOf())
     }
 
-    private val _filterAnimes = MutableLiveData<PagingData<AnimeEntity>>()
-    val filterAnimes: LiveData<PagingData<AnimeEntity>> get() = _filterAnimes
+    private val _filterAnimes = MutableLiveData<PagingData<Anime>>()
+    val filterAnimes: LiveData<PagingData<Anime>> get() = _filterAnimes
     private val _isFilterChanging = MutableLiveData(true)
     val isFilterChanging: LiveData<Boolean?> get() = _isFilterChanging
 

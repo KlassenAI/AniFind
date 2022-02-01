@@ -3,17 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/menu_home"
-    app:startDestination="@id/fragmentHome">
+    app:startDestination="@id/homeFragment">
     <fragment
-        android:id="@+id/fragmentHome"
+        android:id="@+id/homeFragment"
         android:name="com.android.anifind.presentation.ui.home.HomeFragment"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_fragmentHome_to_animeFragment"
-            app:destination="@id/animeFragment" />
+            android:id="@+id/action_homeFragment_to_homeAnimeFragment"
+            app:destination="@id/homeAnimeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/animeFragment"
-        android:name="com.android.anifind.presentation.ui.anime.AnimeFragment"
-        tools:layout="@layout/fragment_anime"  />
+        android:id="@+id/homeAnimeFragment"
+        android:name="com.android.anifind.presentation.ui.anime.HomeAnimeFragment"
+        tools:layout="@layout/fragment_anime" >
+        <action
+            android:id="@+id/action_homeAnimeFragment_to_similarFragment"
+            app:destination="@id/similarFragment" />
+        <action
+            android:id="@+id/action_homeAnimeFragment_to_relatedFragment"
+            app:destination="@id/relatedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/similarFragment"
+        android:name="com.android.anifind.presentation.ui.anime.SimilarFragment"
+        android:label="fragment_similar"
+        tools:layout="@layout/fragment_similar" />
+    <fragment
+        android:id="@+id/relatedFragment"
+        android:name="com.android.anifind.presentation.ui.anime.RelatedFragment"
+        android:label="fragment_related"
+        tools:layout="@layout/fragment_related" />
 </navigation>

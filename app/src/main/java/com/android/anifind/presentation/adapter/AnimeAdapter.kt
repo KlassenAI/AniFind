@@ -2,23 +2,29 @@ package com.android.anifind.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.android.anifind.databinding.ItemAnimeBinding
+import com.android.anifind.domain.model.Anime
 import com.android.anifind.domain.model.AnimeEntity
 import com.android.anifind.domain.model.WatchStatus
 import com.android.anifind.domain.model.WatchStatus.NO
-import com.android.anifind.extensions.navigateToAnimeFragment
+import com.android.anifind.presentation.ui.overview.RecentFragment
 import com.android.anifind.presentation.viewmodel.BaseViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class AnimeAdapter(
-    private val viewModel: BaseViewModel,
-    private val fragment: Fragment,
+    private val baseViewModel: BaseViewModel,
+    private val listener: OnItemClickListener,
 ) : RecyclerView.Adapter<AnimeAdapter.ViewHolder>() {
+
+    interface OnItemClickListener {
+        fun notifyItemClicked(anime: Anime)
+        fun notifyShowSnackbar(text: String, action: () -> Unit)
+    }
 
     fun submitList(list: List<AnimeEntity>) = differ.submitList(list)
 
@@ -42,9 +48,9 @@ class AnimeAdapter(
     }
 
     private fun loadAnimeInfo(animeEntity: AnimeEntity) {
-        viewModel.requestAnimeInfo(animeEntity.id)
+        baseViewModel.requestAnimeInfo(animeEntity.id)
             .subscribeOn(Schedulers.io())
-            .subscribe({ viewModel.update(animeEntity.apply { info = it }) }, {})
+            .subscribe({ baseViewModel.update(animeEntity.apply { info = it }) }, {})
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
@@ -77,14 +83,9 @@ class AnimeAdapter(
             date.text = entity.year
             episodes.hide()
             score.text = entity.score
-            itemView.setOnClickListener { navigateToAnimeFragment(entity) }
+            itemView.setOnClickListener { listener.notifyItemClicked(Anime(entity)) }
             btnFavorite.setOnClickListener { onFavoriteBtnClick(entity, position) }
             btnStatus.setOnClickListener { onStatusBtnClick(entity, position) }
-        }
-
-        private fun navigateToAnimeFragment(entity: AnimeEntity) {
-            viewModel.saveAnime(entity)
-            fragment.navigateToAnimeFragment()
         }
 
         private fun onFavoriteBtnClick(entity: AnimeEntity, position: Int) {
@@ -93,15 +94,15 @@ class AnimeAdapter(
                 true -> "Добавлено в избранное"
                 else -> "Удалено из избранного"
             }
-            fragment.view?.snackbar(text) { changeFavoriteParam(entity, position) }
+            listener.notifyShowSnackbar(text) { changeFavoriteParam(entity, position) }
         }
 
         private fun changeFavoriteParam(animeEntity: AnimeEntity, position: Int) {
             animeEntity.isFavorite = animeEntity.isFavorite != true
             when {
-                animeEntity.watchStatus != NO -> viewModel.update(animeEntity)
-                animeEntity.isFavorite -> viewModel.insert(animeEntity)
-                else -> viewModel.delete(animeEntity)
+                animeEntity.watchStatus != NO -> baseViewModel.update(animeEntity)
+                animeEntity.isFavorite -> baseViewModel.insert(animeEntity)
+                else -> baseViewModel.delete(animeEntity)
             }
             notifyItemChanged(position, PayloadType.FAVORITE)
         }
@@ -131,7 +132,7 @@ class AnimeAdapter(
                         5 -> "Добавлено в брошенное"
                         else -> throw Exception()
                     }
-                    fragment.view?.snackbar(text) { changeStatusParam(entity, index, old, new) }
+                    listener.notifyShowSnackbar(text) { changeStatusParam(entity, index, old, new) }
                     dialog.dismiss()
                 }
                 .setNegativeButton("Отмена", null)
@@ -141,9 +142,9 @@ class AnimeAdapter(
         private fun changeStatusParam(animeEntity: AnimeEntity, position: Int, new: Int, old: Int) {
             animeEntity.watchStatus = WatchStatus.getItem(new)
             when {
-                animeEntity.isFavorite || old != 0 -> viewModel.update(animeEntity)
-                animeEntity.watchStatus == NO -> viewModel.delete(animeEntity)
-                else -> viewModel.insert(animeEntity)
+                animeEntity.isFavorite || old != 0 -> baseViewModel.update(animeEntity)
+                animeEntity.watchStatus == NO -> baseViewModel.delete(animeEntity)
+                else -> baseViewModel.insert(animeEntity)
             }
             notifyItemChanged(position, PayloadType.STATUS)
         }

@@ -1,89 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp"
-    tools:context=".presentation.ui.overview.OverviewFragment">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btn_recent"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:text="Недавние"
-        android:visibility="gone"
-        app:icon="@drawable/ic_time"
-        app:iconGravity="textStart" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp"
+        tools:context=".presentation.ui.overview.OverviewFragment">
 
-    <Button
-        android:id="@+id/btn_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:text="Поиск"
-        app:icon="@drawable/ic_search"
-        app:iconGravity="textStart" />
+        <LinearLayout
+            android:id="@+id/layout_recent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_filter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:text="Фильтр"
-        app:icon="@drawable/ic_filter"
-        app:iconGravity="textStart" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btn_recommendations"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:text="Рекомендации"
-        app:icon="@drawable/ic_star"
-        app:iconGravity="textStart" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/recent"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/btn_random"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:text="Рандом"
-        app:icon="@drawable/ic_shuffle"
-        app:iconGravity="textStart" />
+                <Button
+                    android:id="@+id/btn_show_recent_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:insetTop="0dp"
+                    android:layout_marginStart="4dp"
+                    android:insetBottom="0dp"
+                    android:minWidth="0dp"
+                    android:minHeight="40dp"
+                    android:text="@string/list" />
 
-    <Button
-        android:id="@+id/btn_popular"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:text="Популярное"
-        app:icon="@drawable/ic_popularity"
-        app:iconGravity="textStart" />
+            </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_calendar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:text="Календарь"
-        app:icon="@drawable/ic_calendar"
-        app:iconGravity="textStart" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_recent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:overScrollMode="never" />
 
-</LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/find_anime"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/search"
+                app:icon="@drawable/ic_search"
+                app:iconGravity="textStart" />
+
+            <Button
+                android:id="@+id/btn_filter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/filter"
+                app:icon="@drawable/ic_filter"
+                app:iconGravity="textStart" />
+
+            <Button
+                android:id="@+id/btn_random"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/random"
+                app:icon="@drawable/ic_shuffle"
+                app:iconGravity="textStart" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recommendations"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

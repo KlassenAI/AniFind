@@ -1,35 +1,36 @@
 package com.android.anifind.presentation.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.android.anifind.databinding.ItemAnimeBinding
+import com.android.anifind.domain.model.Anime
 import com.android.anifind.domain.model.AnimeEntity
 import com.android.anifind.domain.model.WatchStatus
 import com.android.anifind.domain.model.WatchStatus.*
-import com.android.anifind.extensions.navigateToAnimeFragment
 import com.android.anifind.presentation.adapter.AdapterType.*
 import com.android.anifind.presentation.adapter.PayloadType.FAVORITE
 import com.android.anifind.presentation.adapter.PayloadType.STATUS
 import com.android.anifind.presentation.viewmodel.BaseViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class AnimePagingAdapter(
-    private val type: AdapterType,
-    private val viewModel: BaseViewModel,
-    private val fragment: Fragment,
-) : PagingDataAdapter<AnimeEntity, AnimePagingAdapter.ViewHolder>(DiffCallback) {
+    private val baseViewModel: BaseViewModel,
+    private val listener: OnItemClickListener
+) : PagingDataAdapter<Anime, AnimePagingAdapter.ViewHolder>(DiffCallback) {
 
-    object DiffCallback : DiffUtil.ItemCallback<AnimeEntity>() {
-        override fun areItemsTheSame(old: AnimeEntity, new: AnimeEntity) = old.id == new.id
-        override fun areContentsTheSame(old: AnimeEntity, new: AnimeEntity) = old == new
+    interface OnItemClickListener {
+        fun notifyItemClicked(anime: Anime)
+        fun notifyShowSnackbar(text: String, action: () -> Unit)
+    }
+
+    object DiffCallback : DiffUtil.ItemCallback<Anime>() {
+        override fun areItemsTheSame(old: Anime, new: Anime) = old.entity.id == new.entity.id
+        override fun areContentsTheSame(old: Anime, new: Anime) = old == new
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
@@ -39,26 +40,26 @@ class AnimePagingAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val anime = getItem(position) ?: return
         holder.bind(anime, position)
-        viewModel.getAnime(anime.id)
+        baseViewModel.getAnime(anime.entity.id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                if (it == null) return@subscribe
-                anime.addDate = it.addDate
-                anime.updateDate = it.updateDate
-                if (it.info == null) loadAnimeInfo(anime)
-                else anime.info = it.info
-                anime.isFavorite = it.isFavorite
+                anime.saved = true
+                anime.entity.addDate = it.addDate
+                anime.entity.updateDate = it.updateDate
+                if (it.info == null) loadAnimeInfo(anime.entity)
+                else anime.entity.info = it.info
+                anime.entity.isFavorite = it.isFavorite
                 notifyItemChanged(position, FAVORITE)
-                anime.watchStatus = it.watchStatus
+                anime.entity.watchStatus = it.watchStatus
                 notifyItemChanged(position, STATUS)
             }
     }
 
     private fun loadAnimeInfo(animeEntity: AnimeEntity) {
-        viewModel.requestAnimeInfo(animeEntity.id)
+        baseViewModel.requestAnimeInfo(animeEntity.id)
             .subscribeOn(Schedulers.io())
-            .subscribe({ viewModel.update(animeEntity.apply { info = it }) }, {})
+            .subscribe({ baseViewModel.update(animeEntity.apply { info = it }) }, {})
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
@@ -66,8 +67,8 @@ class AnimePagingAdapter(
             payloads.forEach { payload ->
                 val item = getItem(position)
                 when (payload) {
-                    FAVORITE -> item?.let { holder.changeFavoriteButtonDraw(it) }
-                    STATUS -> item?.let { holder.changeStatusButtonDraw(it) }
+                    FAVORITE -> item?.let { holder.changeFavoriteButtonDraw(it.entity) }
+                    STATUS -> item?.let { holder.changeStatusButtonDraw(it.entity) }
                 }
             }
         } else super.onBindViewHolder(holder, position, payloads)
@@ -84,20 +85,15 @@ class AnimePagingAdapter(
             changeStatusButtonDraw(btnStatus, animeEntity.watchStatus)
         }
 
-        fun bind(entity: AnimeEntity, position: Int) = with(binding) {
-            Log.d("entity", entity.toString())
-            changeFavoriteButtonDraw(entity)
-            changeStatusButtonDraw(entity)
-            poster.setImage(entity.imageUrl)
-            name.text = entity.name
-            when (type) {
-                DEFAULT -> bindByType(date = entity.year, score = entity.score)
-                ANONS -> bindByType(date = entity.date)
-                ONGOING -> bindByType(eps = entity.episodesInfo, score = entity.score)
-            }
-            itemView.setOnClickListener { navigateToAnimeFragment(entity) }
-            btnFavorite.setOnClickListener { onFavoriteBtnClick(entity, position) }
-            btnStatus.setOnClickListener { onStatusBtnClick(entity, position) }
+        fun bind(anime: Anime, position: Int) = with(binding) {
+            changeFavoriteButtonDraw(anime.entity)
+            changeStatusButtonDraw(anime.entity)
+            poster.setImage(anime.entity.imageUrl)
+            name.text = anime.entity.name
+            bindByType(date = anime.entity.year, score = anime.entity.score)
+            itemView.setOnClickListener { listener.notifyItemClicked(anime) }
+            btnFavorite.setOnClickListener { listener.notifyItemClicked(anime) }
+            btnStatus.setOnClickListener { onStatusBtnClick(anime.entity, position) }
         }
 
         private fun bindByType(
@@ -108,26 +104,21 @@ class AnimePagingAdapter(
             if (score.isEmpty()) this.score.hide() else this.score.text = score
         }
 
-        private fun navigateToAnimeFragment(entity: AnimeEntity) {
-            viewModel.saveAnime(entity)
-            fragment.navigateToAnimeFragment()
-        }
-
         private fun onFavoriteBtnClick(entity: AnimeEntity, position: Int) {
             changeFavoriteParam(entity, position)
             val text = when (entity.isFavorite) {
                 true -> "Добавлено в избранное"
                 else -> "Удалено из избранного"
             }
-            showSnackbarWithAction(text) { changeFavoriteParam(entity, position) }
+            listener.notifyShowSnackbar(text) { changeFavoriteParam(entity, position) }
         }
 
         private fun changeFavoriteParam(animeEntity: AnimeEntity, position: Int) {
             animeEntity.isFavorite = animeEntity.isFavorite != true
             when {
-                animeEntity.watchStatus != NO -> viewModel.update(animeEntity)
-                animeEntity.isFavorite -> viewModel.insert(animeEntity)
-                else -> viewModel.delete(animeEntity)
+                animeEntity.watchStatus != NO -> baseViewModel.update(animeEntity)
+                animeEntity.isFavorite -> baseViewModel.insert(animeEntity)
+                else -> baseViewModel.delete(animeEntity)
             }
             notifyItemChanged(position, FAVORITE)
         }
@@ -157,7 +148,7 @@ class AnimePagingAdapter(
                         5 -> "Добавлено в брошенное"
                         else -> throw Exception()
                     }
-                    showSnackbarWithAction(text) { changeStatusParam(entity, index, old, new) }
+                    listener.notifyShowSnackbar(text) { changeStatusParam(entity, index, old, new) }
                     dialog.dismiss()
                 }
                 .setNegativeButton("Отмена", null)
@@ -167,16 +158,11 @@ class AnimePagingAdapter(
         private fun changeStatusParam(animeEntity: AnimeEntity, position: Int, new: Int, old: Int) {
             animeEntity.watchStatus = WatchStatus.getItem(new)
             when {
-                animeEntity.isFavorite || old != 0 -> viewModel.update(animeEntity)
-                animeEntity.watchStatus == NO -> viewModel.delete(animeEntity)
-                else -> viewModel.insert(animeEntity)
+                animeEntity.isFavorite || old != 0 -> baseViewModel.update(animeEntity)
+                animeEntity.watchStatus == NO -> baseViewModel.delete(animeEntity)
+                else -> baseViewModel.insert(animeEntity)
             }
             notifyItemChanged(position, STATUS)
         }
-
-        private fun showSnackbarWithAction(text: String, action: () -> Unit) = Snackbar
-            .make(fragment.view!!, text, Snackbar.LENGTH_SHORT)
-            .setAction("Отмена") { action() }
-            .show()
     }
 }

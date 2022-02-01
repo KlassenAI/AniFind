@@ -51,8 +51,18 @@ fun RecyclerView.init(paramAdapter: SearchAdapter, onItemClick: ((String) -> Uni
     paramAdapter.onItemClick = onItemClick
 }
 
-fun RecyclerView.init(paramAdapter: AnimeAdapter) {
+fun <VH : RecyclerView.ViewHolder?> RecyclerView.init(
+    paramAdapter: RecyclerView.Adapter<VH>,
+    orientation: Int = DividerItemDecoration.VERTICAL
+) {
     layoutManager = LinearLayoutManager(context)
-    addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+    addItemDecoration(DividerItemDecoration(context, orientation))
+    adapter = paramAdapter
+}
+
+fun <VH : RecyclerView.ViewHolder?> RecyclerView.initHorizontal(
+    paramAdapter: RecyclerView.Adapter<VH>
+) {
+    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     adapter = paramAdapter
 }

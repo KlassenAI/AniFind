@@ -48,8 +48,3 @@ fun changeStatusButtonDraw(btn: ImageButton, status: WatchStatus) = when (status
     HOLD -> btn.setDraw(R.drawable.ic_pause)
     DROPPED -> btn.setDraw(R.drawable.ic_cancel)
 }
-
-fun View.snackbar(text: String, action: (() -> Unit)? = null) = Snackbar
-    .make(this, text, Snackbar.LENGTH_SHORT)
-    .setAction("Отмена") { action?.invoke() }
-    .show()

@@ -6,7 +6,6 @@ import android.widget.ArrayAdapter
 import androidx.annotation.ArrayRes
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.anifind.Constants
@@ -16,7 +15,6 @@ import com.android.anifind.domain.model.Genre
 import com.android.anifind.domain.model.QueryMap
 import com.android.anifind.domain.model.Studio
 import com.android.anifind.extensions.*
-import com.android.anifind.presentation.adapter.AdapterType.DEFAULT
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.ui.dialog.MultiChoiceDialog
 import com.android.anifind.presentation.ui.dialog.MultiChoiceDialog.Type.GENRE
@@ -24,7 +22,7 @@ import com.android.anifind.presentation.ui.dialog.MultiChoiceDialog.Type.STUDIO
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
 import com.google.android.material.textfield.TextInputLayout
 
-class FilterFragment : Fragment(R.layout.fragment_filter), MultiChoiceDialog.Listener {
+class FilterFragment : BaseOverviewFragment(R.layout.fragment_filter), MultiChoiceDialog.Listener {
 
     companion object {
         const val GENRES = "Жанры"
@@ -47,7 +45,7 @@ class FilterFragment : Fragment(R.layout.fragment_filter), MultiChoiceDialog.Lis
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = AnimePagingAdapter(DEFAULT, overviewViewModel, this)
+        adapter = AnimePagingAdapter(overviewViewModel, this)
         initFields()
         initObservers()
         initClicks()

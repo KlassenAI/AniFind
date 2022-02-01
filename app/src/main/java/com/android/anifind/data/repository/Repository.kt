@@ -10,7 +10,6 @@ import com.android.anifind.data.network.RetrofitService
 import com.android.anifind.data.paging.AnimePagingSource
 import com.android.anifind.domain.model.AnimeEntity
 import com.android.anifind.domain.model.WatchStatus.*
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,26 +30,32 @@ class Repository @Inject constructor(
         private val popularity = "order" to "popularity"
     }
 
-    fun requestAnimeInfo(id: Int) = service.requestAnimeInfo(id)
     fun requestAnimes(request: String) = getPager(hashMapOf(limit, "search" to request))
     fun requestFilterAnimes(map: HashMap<String, String>) = getPager(map)
     fun requestLatestAnimes() = getPager(hashMapOf(limit, latest, popularity))
     fun requestAnonsAnimes() = getPager(hashMapOf(limit, anons, popularity))
     fun requestOnGoingAnimes() = getPager(hashMapOf(limit, ongoing, popularity))
-    fun requestPopularAnimes() = getPager(hashMapOf(limit, popularity))
 
     private fun getPager(map: HashMap<String, String>) = Pager(
         PagingConfig(20), null, { AnimePagingSource(service, map) }
     ).observable
 
+    fun requestAnimeInfo(id: Int) = service.requestAnimeInfo(id)
+    fun requestSimilarAnime(id: Int) = service.requestSimilarAnime(id)
+    fun requestRelatedAnime(id: Int) = service.requestRelatedAnime(id)
+
     fun getAnime(id: Int) = dao.getAnime(id)
-    fun getAnimes() = dao.getAnimes()
+    fun getRecentAnime() = dao.getRecentAnime()
     fun getFavoriteAnimes() = dao.getFavoriteAnimes()
     fun getCompletedAnimes() = dao.getAnimesByStatus(COMPLETED)
     fun getDroppedAnimes() = dao.getAnimesByStatus(DROPPED)
     fun getHoldAnimes() = dao.getAnimesByStatus(HOLD)
     fun getPlannedAnimes() = dao.getAnimesByStatus(PLANNED)
     fun getWatchingAnimes() = dao.getAnimesByStatus(WATCHING)
+
+    fun deleteRecentAnime() {
+        dao.deleteRecentAnime().subscribeOn(Schedulers.io()).subscribe()
+    }
 
     fun insert(animeEntity: AnimeEntity) {
         val date = getCurrentDate()
@@ -72,4 +77,6 @@ class Repository @Inject constructor(
     private fun getCurrentDate() = SimpleDateFormat(DATE_PATTERN, Locale(LANG_RU)).apply {
         timeZone = TimeZone.getDefault()
     }.format(Date())
+
+
 }
