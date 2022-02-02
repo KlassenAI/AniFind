@@ -9,8 +9,7 @@ abstract class GenericAdapter<T : IDiffUtilItem, VH : RecyclerView.ViewHolder?>:
     private var items: List<T> = emptyList()
 
     fun submitList(value: List<T>) {
-        val diffCallback = GenericDiffUtilCallback(items, value)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        val diffResult = DiffUtil.calculateDiff(GenericDiffUtilCallback(items, value))
         items = value
         diffResult.dispatchUpdatesTo(this)
     }

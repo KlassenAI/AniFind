@@ -7,7 +7,6 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.anifind.presentation.adapter.AnimeAdapter
 import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.adapter.LoadStateAdapter
 import com.android.anifind.presentation.adapter.SearchAdapter

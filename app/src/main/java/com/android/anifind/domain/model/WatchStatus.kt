@@ -1,6 +1,10 @@
 package com.android.anifind.domain.model
 
-enum class WatchStatus(var title: String) {
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+enum class WatchStatus(var title: String): Parcelable {
     NO("не смотрел(а)"),
     WATCHING("смотрю"),
     PLANNED("запланировано"),

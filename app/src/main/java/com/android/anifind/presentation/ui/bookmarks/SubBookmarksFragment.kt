@@ -15,21 +15,21 @@ import com.android.anifind.extensions.conceal
 import com.android.anifind.extensions.init
 import com.android.anifind.extensions.navigateToBookmarksAnime
 import com.android.anifind.extensions.showSnackbar
-import com.android.anifind.presentation.adapter.AnimeAdapter
+import com.android.anifind.presentation.adapter.AnimeEntityAdapter
 import com.android.anifind.presentation.viewmodel.BookmarksViewModel
 import com.android.anifind.presentation.viewmodel.SharedViewModel
 
-abstract class SubBookmarksFragment: Fragment(R.layout.fragment_sub_bookmarks), AnimeAdapter.OnItemClickListener {
+abstract class SubBookmarksFragment: Fragment(R.layout.fragment_sub_bookmarks), AnimeEntityAdapter.OnItemClickListener {
 
     val viewModel: BookmarksViewModel by activityViewModels()
     private val binding: FragmentSubBookmarksBinding by viewBinding()
     private val sharedViewModel: SharedViewModel by activityViewModels()
-    private lateinit var adapter: AnimeAdapter
+    private lateinit var entityAdapter: AnimeEntityAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = AnimeAdapter(viewModel, this)
-        binding.recycler.init(adapter)
+        entityAdapter = AnimeEntityAdapter(viewModel, this)
+        binding.recycler.init(entityAdapter)
         initData()
     }
 
@@ -37,15 +37,15 @@ abstract class SubBookmarksFragment: Fragment(R.layout.fragment_sub_bookmarks), 
 
     fun LiveData<List<AnimeEntity>>.observe() = with(binding) {
         observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+            entityAdapter.submitList(it)
             progressBar.conceal()
             emptyMessage.isVisible = it.isEmpty()
             recycler.isVisible = it.isNotEmpty()
         }
     }
 
-    override fun notifyItemClicked(anime: Anime) {
-        sharedViewModel.initBookmarksAnime(anime)
+    override fun notifyItemClicked(animeEntity: AnimeEntity) {
+        sharedViewModel.initBookmarksAnime(animeEntity)
         navigateToBookmarksAnime()
     }
 

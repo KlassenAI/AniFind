@@ -10,7 +10,6 @@ import com.android.anifind.domain.model.Anime
 import com.android.anifind.domain.model.AnimeEntity
 import com.android.anifind.domain.model.WatchStatus
 import com.android.anifind.domain.model.WatchStatus.*
-import com.android.anifind.presentation.adapter.AdapterType.*
 import com.android.anifind.presentation.adapter.PayloadType.FAVORITE
 import com.android.anifind.presentation.adapter.PayloadType.STATUS
 import com.android.anifind.presentation.viewmodel.BaseViewModel

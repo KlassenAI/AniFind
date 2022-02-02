@@ -1,173 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="4dp">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp">
-
-            <ImageButton
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:background="@drawable/ripple_effect"
-                android:contentDescription="@string/cd_backward"
-                android:padding="8dp"
-                android:src="@drawable/ic_arrow_back"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/poster"
-                android:layout_width="214dp"
-                android:layout_height="300dp"
-                android:layout_gravity="center_horizontal"
-                android:contentDescription="@string/cd_poster"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <TextView
-            android:id="@+id/russian_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/original_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:drawableStart="@drawable/ic_calendar"
-            android:drawablePadding="4dp"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/kind"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:drawableStart="@drawable/ic_assignment"
-            android:drawablePadding="4dp"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/episodes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:drawableStart="@drawable/ic_video"
-            android:drawablePadding="4dp"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:drawableStart="@drawable/ic_star"
-            android:drawablePadding="4dp"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/studio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:drawableStart="@drawable/ic_studio"
-            android:drawablePadding="4dp"
-            android:textSize="14sp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:textSize="14sp" />
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="4dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/btn_status"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp">
+
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/ripple_effect"
+                    android:contentDescription="@string/cd_backward"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_arrow_back"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/poster"
+                    android:layout_width="214dp"
+                    android:layout_height="300dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/cd_poster"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/russian_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:layout_weight="1">
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
-                <AutoCompleteTextView
-                    android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/original_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:drawableStart="@drawable/ic_calendar"
+                android:drawablePadding="4dp"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/kind"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:drawableStart="@drawable/ic_assignment"
+                android:drawablePadding="4dp"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/episodes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:drawableStart="@drawable/ic_video"
+                android:drawablePadding="4dp"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:drawableStart="@drawable/ic_star"
+                android:drawablePadding="4dp"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/studio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:drawableStart="@drawable/ic_studio"
+                android:drawablePadding="4dp"
+                android:textSize="14sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/btn_status"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:text="@string/text_dont_watch"
-                    tools:ignore="LabelFor" />
+                    android:layout_weight="1"
+                    android:padding="0dp"
+                    app:endIconDrawable="@drawable/ic_arrow_drop_down"
+                    app:endIconMode="custom">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <AutoCompleteTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:background="@drawable/bookmark_empty_bordered"
+                        android:inputType="none"
+                        android:text="@string/text_dont_watch"
+                        tools:ignore="LabelFor" />
 
-            <ImageButton
-                android:id="@+id/btn_favorite"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/ripple_effect"
-                android:contentDescription="@string/cd_btn_favorite"
-                android:padding="8dp"
-                android:src="@drawable/ic_bookmark_border_48" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_favorite"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="2.5dp"
+                    android:background="@drawable/bookmark_empty_bordered"
+                    android:contentDescription="@string/cd_btn_favorite"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_bookmark_border_36" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_related"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/related" />
+
+            <Button
+                android:id="@+id/btn_similar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/similar" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_related"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="2dp"
-            android:text="@string/related" />
+    </androidx.core.widget.NestedScrollView>
 
-        <Button
-            android:id="@+id/btn_similar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="2dp"
-            android:text="@string/similar" />
-
-    </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

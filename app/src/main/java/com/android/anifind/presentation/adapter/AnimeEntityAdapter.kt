@@ -2,40 +2,25 @@ package com.android.anifind.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.android.anifind.databinding.ItemAnimeBinding
 import com.android.anifind.domain.model.Anime
 import com.android.anifind.domain.model.AnimeEntity
 import com.android.anifind.domain.model.WatchStatus
 import com.android.anifind.domain.model.WatchStatus.NO
-import com.android.anifind.presentation.ui.overview.RecentFragment
 import com.android.anifind.presentation.viewmodel.BaseViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-class AnimeAdapter(
+class AnimeEntityAdapter(
     private val baseViewModel: BaseViewModel,
     private val listener: OnItemClickListener,
-) : RecyclerView.Adapter<AnimeAdapter.ViewHolder>() {
+) : GenericAdapter<AnimeEntity, AnimeEntityAdapter.ViewHolder>() {
 
     interface OnItemClickListener {
-        fun notifyItemClicked(anime: Anime)
+        fun notifyItemClicked(animeEntity: AnimeEntity)
         fun notifyShowSnackbar(text: String, action: () -> Unit)
     }
-
-    fun submitList(list: List<AnimeEntity>) = differ.submitList(list)
-
-    private fun getItem(position: Int) = differ.currentList[position]
-
-    private val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<AnimeEntity>() {
-        override fun areItemsTheSame(old: AnimeEntity, new: AnimeEntity): Boolean = old.id == new.id
-        override fun areContentsTheSame(old: AnimeEntity, new: AnimeEntity): Boolean = old == new
-    })
-
-    override fun getItemCount(): Int = differ.currentList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
         ItemAnimeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -83,7 +68,7 @@ class AnimeAdapter(
             date.text = entity.year
             episodes.hide()
             score.text = entity.score
-            itemView.setOnClickListener { listener.notifyItemClicked(Anime(entity)) }
+            itemView.setOnClickListener { listener.notifyItemClicked(entity) }
             btnFavorite.setOnClickListener { onFavoriteBtnClick(entity, position) }
             btnStatus.setOnClickListener { onStatusBtnClick(entity, position) }
         }

@@ -20,16 +20,13 @@ open class SharedViewModel @Inject constructor(repository: Repository) : BaseVie
     val overviewAnime: LiveData<Anime> get() = _overviewAnime
     fun initOverviewAnime(anime: Anime) = _overviewAnime.postValue(anime)
 
-    private val _bookmarksAnime = MutableLiveData<Anime>()
-    val bookmarksAnime: LiveData<Anime> get() = _bookmarksAnime
-    fun initBookmarksAnime(anime: Anime) = _bookmarksAnime.postValue(anime)
+    private val _bookmarksAnime = MutableLiveData<AnimeEntity>()
+    val bookmarksAnime: LiveData<AnimeEntity> get() = _bookmarksAnime
+    fun initBookmarksAnime(animeEntity: AnimeEntity) = _bookmarksAnime.postValue(animeEntity)
 
     fun loadAnimeInfo(anime: AnimeEntity) {
         requestAnimeInfo(anime.id)
             .subscribeOn(Schedulers.io())
-            .subscribe({
-                anime.info = it
-                update(anime)
-            }, {})
+            .subscribe({ update(anime.apply { info = it }) }, {})
     }
 }

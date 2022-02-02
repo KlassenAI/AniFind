@@ -8,29 +8,29 @@ import androidx.fragment.app.activityViewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.anifind.R
 import com.android.anifind.databinding.FragmentRecentBinding
-import com.android.anifind.domain.model.Anime
+import com.android.anifind.domain.model.AnimeEntity
 import com.android.anifind.extensions.*
-import com.android.anifind.presentation.adapter.AnimeAdapter
+import com.android.anifind.presentation.adapter.AnimeEntityAdapter
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
 import com.android.anifind.presentation.viewmodel.SharedViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class RecentFragment: Fragment(R.layout.fragment_recent), AnimeAdapter.OnItemClickListener {
+class RecentFragment: Fragment(R.layout.fragment_recent), AnimeEntityAdapter.OnItemClickListener {
 
     private val binding: FragmentRecentBinding by viewBinding()
     private val viewModel: OverviewViewModel by activityViewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels()
-    private lateinit var adapter: AnimeAdapter
+    private lateinit var entityAdapter: AnimeEntityAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = AnimeAdapter(viewModel, this)
+        entityAdapter = AnimeEntityAdapter(viewModel, this)
         initRecyclers()
         initButtons()
         initObservers()
     }
 
-    private fun initRecyclers() = with(binding) { recycler.init(adapter) }
+    private fun initRecyclers() = with(binding) { recycler.init(entityAdapter) }
 
     private fun initButtons() = with(binding) {
         btnBack.setOnClickListener { navigateUp() }
@@ -49,15 +49,15 @@ class RecentFragment: Fragment(R.layout.fragment_recent), AnimeAdapter.OnItemCli
 
     private fun initObservers() = with(binding) {
         viewModel.recentAnimes.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+            entityAdapter.submitList(it)
             progressBar.conceal()
             emptyMessage.isVisible = it.isEmpty()
             recycler.isVisible = it.isNotEmpty()
         }
     }
 
-    override fun notifyItemClicked(anime: Anime) {
-        sharedViewModel.initBookmarksAnime(anime)
+    override fun notifyItemClicked(animeEntity: AnimeEntity) {
+        sharedViewModel.initBookmarksAnime(animeEntity)
         navigateToBookmarksAnime()
     }
 
