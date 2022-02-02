@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.ui.bookmarks.DroppedFragment">
+    tools:context=".presentation.ui.home.SubHomeFragment">
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progress_bar"
@@ -18,12 +18,27 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/empty_message"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/error_message"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:layout_gravity="center"
-        android:text="@string/text_empty_message"
-        android:visibility="gone" />
+        android:orientation="vertical"
+        android:padding="4dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_error_message" />
+
+        <Button
+            android:id="@+id/btn_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_retry" />
+
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
