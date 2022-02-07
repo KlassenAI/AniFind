@@ -10,6 +10,7 @@ import com.android.anifind.data.network.RetrofitService
 import com.android.anifind.data.paging.AnimePagingSource
 import com.android.anifind.domain.model.AnimeEntity
 import com.android.anifind.domain.model.WatchStatus.*
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,15 +35,13 @@ class Repository @Inject constructor(
     fun requestFilterAnimes(map: HashMap<String, String>) = getPager(map)
     fun requestLatestAnimes() = getPager(hashMapOf(limit, latest, popularity))
     fun requestAnonsAnimes() = getPager(hashMapOf(limit, anons, popularity))
-    fun requestOnGoingAnimes() = getPager(hashMapOf(limit, ongoing, popularity))
+    fun requestOngoingAnimes() = getPager(hashMapOf(limit, ongoing, popularity))
 
     private fun getPager(map: HashMap<String, String>) = Pager(
         PagingConfig(20), null, { AnimePagingSource(service, map) }
     ).observable
 
     fun requestAnimeInfo(id: Int) = service.requestAnimeInfo(id)
-    fun requestSimilarAnime(id: Int) = service.requestSimilarAnime(id)
-    fun requestRelatedAnime(id: Int) = service.requestRelatedAnime(id)
 
     fun getAnime(id: Int) = dao.getAnime(id)
     fun getRecentAnime() = dao.getRecentAnime()
@@ -70,6 +69,11 @@ class Repository @Inject constructor(
         dao.update(animeEntity).subscribeOn(Schedulers.io()).subscribe()
     }
 
+    fun updateWithResult(animeEntity: AnimeEntity): Completable {
+        val date = getCurrentDate()
+        animeEntity.updateDate = date
+        return dao.update(animeEntity)
+    }
     fun delete(animeEntity: AnimeEntity) {
         dao.delete(animeEntity).subscribeOn(Schedulers.io()).subscribe()
     }

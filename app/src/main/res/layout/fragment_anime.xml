@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".presentation.ui.anime.BaseAnimeFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -13,18 +14,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="4dp">
+            android:padding="8dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp">
+                android:layout_margin="8dp">
 
                 <ImageButton
                     android:id="@+id/btn_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
                     android:background="@drawable/ripple_effect"
                     android:contentDescription="@string/cd_backward"
                     android:padding="8dp"
@@ -44,139 +44,144 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/russian_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/original_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:drawableStart="@drawable/ic_calendar"
-                android:drawablePadding="4dp"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/kind"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:drawableStart="@drawable/ic_assignment"
-                android:drawablePadding="4dp"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/episodes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:drawableStart="@drawable/ic_video"
-                android:drawablePadding="4dp"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:drawableStart="@drawable/ic_star"
-                android:drawablePadding="4dp"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/studio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:drawableStart="@drawable/ic_studio"
-                android:drawablePadding="4dp"
-                android:textSize="14sp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler"
-                android:visibility="gone"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:textSize="14sp" />
+                android:layout_margin="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/russian_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/original_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_margin="8dp"
                 android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/btn_status"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:padding="0dp"
                     app:endIconDrawable="@drawable/ic_arrow_drop_down"
                     app:endIconMode="custom">
 
                     <AutoCompleteTextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/round_border"
                         android:focusable="false"
-                        android:background="@drawable/bookmark_empty_bordered"
                         android:inputType="none"
-                        android:text="@string/text_dont_watch"
+                        android:padding="0dp"
                         tools:ignore="LabelFor" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <ImageButton
                     android:id="@+id/btn_favorite"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical|bottom"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="2.5dp"
-                    android:background="@drawable/bookmark_empty_bordered"
+                    android:background="@drawable/round_border"
                     android:contentDescription="@string/cd_btn_favorite"
                     android:padding="8dp"
-                    android:src="@drawable/ic_bookmark_border_36" />
+                    android:src="@drawable/ic_bookmark_border" />
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_related"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="2dp"
-                android:text="@string/related" />
+                android:layout_margin="8dp"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btn_similar"
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/kind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:drawableStart="@drawable/ic_assignment"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/episodes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:drawableStart="@drawable/ic_video"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:drawableStart="@drawable/ic_star"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/studio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:drawableStart="@drawable/ic_studio"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="4dp"
-                android:layout_marginBottom="2dp"
-                android:text="@string/similar" />
+                android:layout_margin="8dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="14sp" />
 
         </LinearLayout>
 

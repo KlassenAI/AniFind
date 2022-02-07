@@ -40,22 +40,7 @@
     <fragment
         android:id="@+id/overviewAnimeFragment"
         android:name="com.android.anifind.presentation.ui.anime.OverviewAnimeFragment"
-        tools:layout="@layout/fragment_anime" >
-        <action
-            android:id="@+id/action_overviewAnimeFragment_to_similarFragment"
-            app:destination="@id/similarFragment" />
-        <action
-            android:id="@+id/action_overviewAnimeFragment_to_relatedFragment"
-            app:destination="@id/relatedFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/similarFragment"
-        android:name="com.android.anifind.presentation.ui.anime.SimilarFragment"
-        tools:layout="@layout/fragment_similar" />
-    <fragment
-        android:id="@+id/relatedFragment"
-        android:name="com.android.anifind.presentation.ui.anime.RelatedFragment"
-        tools:layout="@layout/fragment_related" />
+        tools:layout="@layout/fragment_anime" />
     <fragment
         android:id="@+id/recentFragment"
         android:name="com.android.anifind.presentation.ui.overview.RecentFragment"

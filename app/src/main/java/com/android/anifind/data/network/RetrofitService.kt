@@ -15,10 +15,4 @@ interface RetrofitService {
 
     @GET("animes/{id}")
     fun requestAnimeInfo(@Path("id") id: Int): Single<AnimeInfo>
-
-    @GET("animes/{id}/related")
-    fun requestRelatedAnime(@Path("id") id: Int): Single<List<Relate>>
-
-    @GET("animes/{id}/similar")
-    fun requestSimilarAnime(@Path("id") id: Int): Single<List<AnimeResponse>>
 }

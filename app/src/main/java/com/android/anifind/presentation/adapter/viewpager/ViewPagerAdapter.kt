@@ -1,4 +1,4 @@
-package com.android.anifind.presentation.viewpager
+package com.android.anifind.presentation.adapter.viewpager
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -8,8 +8,8 @@ import com.android.anifind.presentation.ui.bookmarks.*
 import com.android.anifind.presentation.ui.home.AnonsFragment
 import com.android.anifind.presentation.ui.home.LatestFragment
 import com.android.anifind.presentation.ui.home.OngoingFragment
-import com.android.anifind.presentation.viewpager.ViewPagerAdapter.Type.BOOKMARKS
-import com.android.anifind.presentation.viewpager.ViewPagerAdapter.Type.HOME
+import com.android.anifind.presentation.adapter.viewpager.ViewPagerAdapter.Type.BOOKMARKS
+import com.android.anifind.presentation.adapter.viewpager.ViewPagerAdapter.Type.HOME
 
 class ViewPagerAdapter(
     manager: FragmentManager,

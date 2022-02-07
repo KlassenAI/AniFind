@@ -54,6 +54,7 @@ fun <VH : RecyclerView.ViewHolder?> RecyclerView.init(
     paramAdapter: RecyclerView.Adapter<VH>,
     orientation: Int = DividerItemDecoration.VERTICAL
 ) {
+    itemAnimator = null
     layoutManager = LinearLayoutManager(context)
     addItemDecoration(DividerItemDecoration(context, orientation))
     adapter = paramAdapter

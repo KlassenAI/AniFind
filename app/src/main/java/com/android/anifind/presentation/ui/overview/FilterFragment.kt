@@ -15,14 +15,13 @@ import com.android.anifind.domain.model.Genre
 import com.android.anifind.domain.model.QueryMap
 import com.android.anifind.domain.model.Studio
 import com.android.anifind.extensions.*
-import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.ui.dialog.MultiChoiceDialog
 import com.android.anifind.presentation.ui.dialog.MultiChoiceDialog.Type.GENRE
 import com.android.anifind.presentation.ui.dialog.MultiChoiceDialog.Type.STUDIO
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
 import com.google.android.material.textfield.TextInputLayout
 
-class FilterFragment : BaseOverviewFragment(R.layout.fragment_filter), MultiChoiceDialog.Listener {
+class FilterFragment : SubOverviewFragment(R.layout.fragment_filter), MultiChoiceDialog.Listener {
 
     companion object {
         const val GENRES = "Жанры"
@@ -40,31 +39,31 @@ class FilterFragment : BaseOverviewFragment(R.layout.fragment_filter), MultiChoi
     private lateinit var genreField: MultiChoiceField<Genre>
     private lateinit var studioField: MultiChoiceField<Studio>
     private val binding: FragmentFilterBinding by viewBinding()
-    private val overviewViewModel: OverviewViewModel by activityViewModels()
-    private lateinit var adapter: AnimePagingAdapter
+    private val viewModel: OverviewViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = AnimePagingAdapter(overviewViewModel, this)
         initFields()
         initObservers()
         initClicks()
     }
 
     private fun initObservers() {
-        overviewViewModel.genres.observe(viewLifecycleOwner, { genreField.list = it })
-        overviewViewModel.genreBooleans.observe(viewLifecycleOwner,
-            { genreField.booleans = it.copyOf() })
-        overviewViewModel.studios.observe(viewLifecycleOwner, { studioField.list = it })
-        overviewViewModel.studiosBooleans.observe(
-            viewLifecycleOwner, { studioField.booleans = it.copyOf() })
-        overviewViewModel.filterAnimes.observe(viewLifecycleOwner, {
+        viewModel.genres.observe(viewLifecycleOwner, { genreField.list = it })
+        viewModel.genreBooleans.observe(viewLifecycleOwner) {
+            genreField.booleans = it.copyOf()
+        }
+        viewModel.studios.observe(viewLifecycleOwner) { studioField.list = it }
+        viewModel.studiosBooleans.observe(viewLifecycleOwner) {
+            studioField.booleans = it.copyOf()
+        }
+        viewModel.filterAnimes.observe(viewLifecycleOwner) {
             adapter.submitData(lifecycle, it)
-        })
-        overviewViewModel.isFilterChanging.observe(viewLifecycleOwner, {
+        }
+        viewModel.isFilterChanging.observe(viewLifecycleOwner) {
             binding.layoutFilter.isVisible = it!!
             binding.layoutList.isVisible = !it
-        })
+        }
     }
 
     private fun initFields() = with(binding) {
@@ -102,10 +101,10 @@ class FilterFragment : BaseOverviewFragment(R.layout.fragment_filter), MultiChoi
         btnBack2.setOnClickListener { navigateUp() }
         btnClear.setOnClickListener { clearFilters() }
         btnRetry.setOnClickListener { adapter.retry() }
-        btnApply.setOnClickListener { overviewViewModel.requestFilterAnimes(getQueryMap()) }
-        btnFilter.setOnClickListener { overviewViewModel.setFilterChanging() }
+        btnApply.setOnClickListener { viewModel.requestFilterAnimes(getQueryMap()) }
+        btnFilter.setOnClickListener { viewModel.setFilterChanging() }
         btnRandom.setOnClickListener {
-            overviewViewModel.requestFilterAnimes(getQueryMapWithRandom())
+            viewModel.requestFilterAnimes(getQueryMapWithRandom())
         }
     }
 
@@ -131,8 +130,8 @@ class FilterFragment : BaseOverviewFragment(R.layout.fragment_filter), MultiChoi
         fieldScore.clear()
         fieldDuration.clear()
         fieldRating.clear()
-        overviewViewModel.clearGenres()
-        overviewViewModel.clearStudios()
+        viewModel.clearGenres()
+        viewModel.clearStudios()
     }
 
     private fun getQueryMap() = getQueryMapBuilder().getHashMap()
@@ -213,22 +212,22 @@ class FilterFragment : BaseOverviewFragment(R.layout.fragment_filter), MultiChoi
 
     override fun positiveAction(type: MultiChoiceDialog.Type, booleans: BooleanArray) {
         when (type) {
-            GENRE -> overviewViewModel.saveGenres(genreField.booleans!!)
-            STUDIO -> overviewViewModel.saveStudios(studioField.booleans!!)
+            GENRE -> viewModel.saveGenres(genreField.booleans!!)
+            STUDIO -> viewModel.saveStudios(studioField.booleans!!)
         }
     }
 
     override fun negativeAction(type: MultiChoiceDialog.Type) {
         when (type) {
-            GENRE -> overviewViewModel.restoreGenres()
-            STUDIO -> overviewViewModel.restoreStudios()
+            GENRE -> viewModel.restoreGenres()
+            STUDIO -> viewModel.restoreStudios()
         }
     }
 
     override fun neutralAction(type: MultiChoiceDialog.Type) {
         when (type) {
-            GENRE -> overviewViewModel.clearGenres()
-            STUDIO -> overviewViewModel.clearStudios()
+            GENRE -> viewModel.clearGenres()
+            STUDIO -> viewModel.clearStudios()
         }
     }
 }

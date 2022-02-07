@@ -8,29 +8,32 @@ import androidx.fragment.app.activityViewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.anifind.R
 import com.android.anifind.databinding.FragmentRecentBinding
+import com.android.anifind.domain.model.Anime
 import com.android.anifind.domain.model.AnimeEntity
+import com.android.anifind.domain.model.WatchStatus
 import com.android.anifind.extensions.*
-import com.android.anifind.presentation.adapter.AnimeEntityAdapter
+import com.android.anifind.presentation.adapter.AnimeAdapter
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
 import com.android.anifind.presentation.viewmodel.SharedViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class RecentFragment: Fragment(R.layout.fragment_recent), AnimeEntityAdapter.OnItemClickListener {
+class RecentFragment: Fragment(R.layout.fragment_recent), AnimeAdapter.Listener {
 
+    private val adapter = AnimeAdapter(this)
     private val binding: FragmentRecentBinding by viewBinding()
-    private val viewModel: OverviewViewModel by activityViewModels()
     private val sharedViewModel: SharedViewModel by activityViewModels()
-    private lateinit var entityAdapter: AnimeEntityAdapter
+    private val overviewViewModel: OverviewViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        entityAdapter = AnimeEntityAdapter(viewModel, this)
         initRecyclers()
         initButtons()
         initObservers()
     }
 
-    private fun initRecyclers() = with(binding) { recycler.init(entityAdapter) }
+    private fun initRecyclers() {
+        binding.recycler.init(adapter)
+    }
 
     private fun initButtons() = with(binding) {
         btnBack.setOnClickListener { navigateUp() }
@@ -39,7 +42,7 @@ class RecentFragment: Fragment(R.layout.fragment_recent), AnimeEntityAdapter.OnI
                 .setTitle("Удаление недавних аниме")
                 .setMessage("Вы точно хотите удалить их?")
                 .setPositiveButton("Да") { _, _ ->
-                    viewModel.deleteRecentAnime()
+                    overviewViewModel.deleteRecentAnime()
                     navigateUp()
                 }
                 .setNegativeButton("Отмена", null)
@@ -48,18 +51,48 @@ class RecentFragment: Fragment(R.layout.fragment_recent), AnimeEntityAdapter.OnI
     }
 
     private fun initObservers() = with(binding) {
-        viewModel.recentAnimes.observe(viewLifecycleOwner) {
-            entityAdapter.submitList(it)
+        overviewViewModel.recentAnimes.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
             progressBar.conceal()
             emptyMessage.isVisible = it.isEmpty()
             recycler.isVisible = it.isNotEmpty()
         }
     }
 
-    override fun notifyItemClicked(animeEntity: AnimeEntity) {
-        sharedViewModel.initBookmarksAnime(animeEntity)
-        navigateToBookmarksAnime()
+    override fun onItemClick(item: AnimeEntity) {
+        sharedViewModel.initOverviewAnime(Anime(item, true))
+        navigateToOverviewAnime()
     }
 
-    override fun notifyShowSnackbar(text: String, action: () -> Unit) = showSnackbar(text, action)
+    override fun onFavoriteButtonClick(item: AnimeEntity, position: Int) {
+        changeFavoriteParam(item, position)
+        val message = getFavoriteChangeMessage(item.isFavorite)
+        showSnackbar(message) { changeFavoriteParam(item, position) }
+    }
+
+    private fun changeFavoriteParam(item: AnimeEntity, position: Int) {
+        item.isFavorite = item.isFavorite != true
+        overviewViewModel.update(item)
+        adapter.notifyItemChanged(position, item.isFavorite)
+    }
+
+    override fun onStatusButtonClick(item: AnimeEntity, position: Int) {
+        val old = item.watchStatus
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(item.name)
+            .setSingleChoiceItems(WatchStatus.titles(), old.ordinal) { dialog, which ->
+                if (which == old.ordinal) return@setSingleChoiceItems
+                changeStatusParam(item, WatchStatus.getItem(which), position)
+                val message = getStatusChangeMessage(old, item.watchStatus)
+                showSnackbar(message) { changeStatusParam(item, old, position) }
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun changeStatusParam(item: AnimeEntity, new: WatchStatus, position: Int) {
+        item.watchStatus = new
+        overviewViewModel.update(item)
+        adapter.notifyItemChanged(position, item.watchStatus)
+    }
 }

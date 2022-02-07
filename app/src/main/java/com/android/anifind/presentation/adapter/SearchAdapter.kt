@@ -8,11 +8,15 @@ import com.android.anifind.presentation.adapter.SearchAdapter.ViewHolder
 
 class SearchAdapter : RecyclerView.Adapter<ViewHolder>() {
 
-    var searches: ArrayList<String> = arrayListOf()
+    private var searches: List<String> = arrayListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
+
+    fun submitList(list: List<String>) {
+        searches = list
+    }
     var onItemClick: ((String) -> Unit)? = null
 
     override fun getItemCount(): Int = searches.size

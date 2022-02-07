@@ -7,13 +7,16 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "animes")
 data class AnimeEntity(
-    @PrimaryKey val id: Int,
+    @PrimaryKey
+    val id: Int,
+    @ColumnInfo(name = "is_name_russian")
+    val isNameRussian: Boolean,
     val name: String,
     val original: String,
     @ColumnInfo(name = "image_url")
     val imageUrl: String,
     val kind: String,
-    val score: String,
+    val score: String?,
     val status: String,
     @ColumnInfo(name = "episodes_info")
     val episodesInfo: String,

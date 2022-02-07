@@ -11,26 +11,21 @@ import com.android.anifind.R
 import com.android.anifind.databinding.FragmentSearchBinding
 import com.android.anifind.extensions.init
 import com.android.anifind.extensions.navigateUp
-import com.android.anifind.presentation.adapter.AnimePagingAdapter
 import com.android.anifind.presentation.adapter.SearchAdapter
 import com.android.anifind.presentation.viewmodel.OverviewViewModel
 import com.jakewharton.rxbinding4.widget.textChanges
-import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-@AndroidEntryPoint
-class SearchFragment : BaseOverviewFragment(R.layout.fragment_search) {
+class SearchFragment : SubOverviewFragment(R.layout.fragment_search) {
 
     private val searchAdapter = SearchAdapter()
-    private val binding: FragmentSearchBinding by viewBinding()
     private val viewModel: OverviewViewModel by activityViewModels()
-    private lateinit var animeAdapter: AnimePagingAdapter
+    private val binding: FragmentSearchBinding by viewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        animeAdapter = AnimePagingAdapter(viewModel, this)
         initRecyclers()
         initObservers()
         initEditText()
@@ -38,16 +33,14 @@ class SearchFragment : BaseOverviewFragment(R.layout.fragment_search) {
     }
 
     private fun initObservers() {
-        viewModel.searchAnimes.observe(viewLifecycleOwner,
-            { animeAdapter.submitData(lifecycle, it) }
-        )
-        viewModel.recentRequests.observe(viewLifecycleOwner,
-            { searchAdapter.searches = it }
-        )
+        viewModel.recentRequests.observe(viewLifecycleOwner) { searchAdapter.submitList(it) }
+        viewModel.searchAnimes.observe(viewLifecycleOwner) {
+            adapter.submitData(lifecycle, it)
+        }
     }
 
     private fun initRecyclers() = with(binding) {
-        recyclerAnimes.init(animeAdapter, progressBar, errorMessage, emptyMessage)
+        recyclerAnimes.init(adapter, progressBar, errorMessage, emptyMessage)
         recyclerRequests.init(searchAdapter) { searchEditText.setText(it) }
     }
 
@@ -65,10 +58,9 @@ class SearchFragment : BaseOverviewFragment(R.layout.fragment_search) {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { viewModel.requestAnimes(it) }
         searchEditText.setOnEditorActionListener { textView, i, _ ->
-            if (i == EditorInfo.IME_ACTION_DONE) {
-                viewModel.saveRequest(textView.text.toString())
-                recyclerAnimes.run { post { smoothScrollToPosition(0) } }
-            }
+            if (i != EditorInfo.IME_ACTION_DONE) return@setOnEditorActionListener false
+            viewModel.saveRequest(textView.text.toString())
+            recyclerAnimes.run { post { smoothScrollToPosition(0) } }
             false
         }
     }
@@ -76,7 +68,7 @@ class SearchFragment : BaseOverviewFragment(R.layout.fragment_search) {
     private fun initButtons() = with(binding) {
         btnBack.setOnClickListener { navigateUp() }
         btnClear.setOnClickListener { viewModel.clearRecentRequests() }
-        btnRetry.setOnClickListener { animeAdapter.retry() }
+        btnRetry.setOnClickListener { adapter.retry() }
         btnReset.setOnClickListener {
             searchEditText.setText("")
             layoutSearches.isVisible = true

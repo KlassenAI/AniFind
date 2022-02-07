@@ -15,22 +15,5 @@
     <fragment
         android:id="@+id/bookmarksAnimeFragment"
         android:name="com.android.anifind.presentation.ui.anime.BookmarksAnimeFragment"
-        tools:layout="@layout/fragment_anime" >
-        <action
-            android:id="@+id/action_bookmarksAnimeFragment_to_relatedFragment"
-            app:destination="@id/relatedFragment" />
-        <action
-            android:id="@+id/action_bookmarksAnimeFragment_to_similarFragment"
-            app:destination="@id/similarFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/similarFragment"
-        android:name="com.android.anifind.presentation.ui.anime.SimilarFragment"
-        android:label="fragment_similar"
-        tools:layout="@layout/fragment_similar" />
-    <fragment
-        android:id="@+id/relatedFragment"
-        android:name="com.android.anifind.presentation.ui.anime.RelatedFragment"
-        android:label="fragment_related"
-        tools:layout="@layout/fragment_related" />
+        tools:layout="@layout/fragment_anime" />
 </navigation>

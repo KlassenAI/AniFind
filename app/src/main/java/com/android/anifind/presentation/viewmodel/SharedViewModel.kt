@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.android.anifind.data.repository.Repository
 import com.android.anifind.domain.model.Anime
 import com.android.anifind.domain.model.AnimeEntity
+import com.android.anifind.presentation.ui.anime.SingleAnimeType
+import com.android.anifind.presentation.ui.anime.SingleAnimeType.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
@@ -24,9 +26,19 @@ open class SharedViewModel @Inject constructor(repository: Repository) : BaseVie
     val bookmarksAnime: LiveData<AnimeEntity> get() = _bookmarksAnime
     fun initBookmarksAnime(animeEntity: AnimeEntity) = _bookmarksAnime.postValue(animeEntity)
 
-    fun loadAnimeInfo(anime: AnimeEntity) {
+    fun loadAnimeInfo(anime: AnimeEntity, type: SingleAnimeType) {
         requestAnimeInfo(anime.id)
             .subscribeOn(Schedulers.io())
-            .subscribe({ update(anime.apply { info = it }) }, {})
+            .subscribe({
+                updateWithResult(anime.apply { info = it })
+                    .subscribeOn(Schedulers.io())
+                    .subscribe {
+                        when(type) {
+                            BOOKMARKS -> _bookmarksAnime.postValue(_bookmarksAnime.value)
+                            HOME -> _homeAnime.postValue(_homeAnime.value)
+                            OVERVIEW -> _overviewAnime.postValue(_overviewAnime.value)
+                        }
+                    }
+            }, {})
     }
 }

@@ -252,16 +252,6 @@
                 android:insetBottom="0dp"
                 android:text="@string/btn_apply" />
 
-            <Button
-                android:id="@+id/btn_random"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="@string/btn_shuffle" />
-
         </LinearLayout>
 
     </LinearLayout>

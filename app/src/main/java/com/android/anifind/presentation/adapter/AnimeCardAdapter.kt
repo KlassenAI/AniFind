@@ -1,35 +1,30 @@
 package com.android.anifind.presentation.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import com.android.anifind.databinding.CardAnimeBinding
 import com.android.anifind.domain.model.AnimeEntity
 
-class AnimeCardAdapter(
-    private val listener: OnItemClickListener,
-) : GenericAdapter<AnimeEntity, AnimeCardAdapter.ViewHolder>() {
+class AnimeCardAdapter : NewGenericAdapter<AnimeEntity, CardAnimeBinding>() {
 
-    interface OnItemClickListener {
-        fun notifyItemClicked(animeEntity: AnimeEntity)
+    private var onItemClick: ((item: AnimeEntity) -> Unit)? = null
+
+    fun setOnItemClickListener(action: (item: AnimeEntity) -> Unit) {
+        onItemClick = action
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
-        CardAnimeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-    )
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun createBinding(inflater: LayoutInflater, parent: ViewGroup): CardAnimeBinding {
+        return CardAnimeBinding.inflate(inflater, parent, false)
     }
 
-    inner class ViewHolder(val binding: CardAnimeBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(entity: AnimeEntity) = with(binding) {
-            poster.setImage(entity.imageUrl)
-            title.text = entity.name
-            title.invalidate()
-            extra.hide()
-            itemView.setOnClickListener { listener.notifyItemClicked(entity) }
-        }
+    override fun bind(
+        binding: CardAnimeBinding, itemView: View, item: AnimeEntity, position: Int
+    ) = with(binding) {
+        poster.setImage(item.imageUrl)
+        title.text = item.name
+        title.invalidate()
+        extra.hide()
+        itemView.setOnClickListener { onItemClick?.invoke(item) }
     }
 }

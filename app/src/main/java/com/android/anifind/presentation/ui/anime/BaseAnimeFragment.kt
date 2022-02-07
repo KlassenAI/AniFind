@@ -1,11 +1,13 @@
 package com.android.anifind.presentation.ui.anime
 
 import android.os.Bundle
+import android.text.Html
 import android.view.View
 import android.widget.ImageButton
+import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.android.anifind.R
 import com.android.anifind.databinding.FragmentAnimeBinding
@@ -15,49 +17,72 @@ import com.android.anifind.domain.model.WatchStatus
 import com.android.anifind.domain.model.WatchStatus.*
 import com.android.anifind.extensions.*
 import com.android.anifind.presentation.adapter.*
+import com.android.anifind.presentation.ui.anime.SingleAnimeType.*
+import com.android.anifind.presentation.viewmodel.BookmarksViewModel
+import com.android.anifind.presentation.viewmodel.HomeViewModel
+import com.android.anifind.presentation.viewmodel.OverviewViewModel
 import com.android.anifind.presentation.viewmodel.SharedViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.android.synthetic.main.item_anime.*
 
-abstract class BaseAnimeFragment : Fragment(R.layout.fragment_anime) {
+abstract class BaseAnimeFragment(
+    private val type: SingleAnimeType
+) : Fragment(R.layout.fragment_anime) {
 
-    val viewModel: SharedViewModel by activityViewModels()
+    private val genreAdapter = GenreAdapter()
+    private val viewModel: SharedViewModel by activityViewModels()
     private val binding: FragmentAnimeBinding by viewBinding()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btnBack.setOnClickListener { navigateUp() }
-        btnRelated.setOnClickListener { navigateToRelated() }
-        btnSimilar.setOnClickListener { navigateToSimilar() }
-        initData()
+        initRecyclers()
+        initButtons()
+        initObservers()
     }
 
-    abstract fun initData()
+    private fun initRecyclers() = with(binding) {
+        recycler.initHorizontal(genreAdapter)
+    }
 
-    fun LiveData<AnimeEntity>.observe() = observe(viewLifecycleOwner) { bind(it) }
+    private fun initButtons() = with(binding) {
+        btnBack.setOnClickListener { navigateUp() }
+    }
 
-    @JvmName("observeAnime")
-    fun LiveData<Anime>.observe() = observe(viewLifecycleOwner) {
-        if (it.saved.not()) {
-            viewModel.insert(it.entity)
-            it.saved = true
+    private fun initObservers() = when (type) {
+        BOOKMARKS -> viewModel.bookmarksAnime.observe(viewLifecycleOwner) { bind(it) }
+        HOME -> viewModel.homeAnime.observe(viewLifecycleOwner) { bind(it) }
+        OVERVIEW -> viewModel.overviewAnime.observe(viewLifecycleOwner) { bind(it) }
+    }
+
+    private fun bind(anime: Anime) {
+        if (anime.saved.not()) {
+            viewModel.insert(anime.entity)
+            anime.saved = true
         }
-        bind(it.entity)
+        bind(anime.entity)
     }
 
     private fun bind(animeEntity: AnimeEntity) = with(binding) {
-        if (animeEntity.info == null) {
-            viewModel.loadAnimeInfo(animeEntity)
-            studio.hide()
-            recycler.hide()
-            description.hide()
+        val infoIsNotNull = animeEntity.info != null
+        studio.isVisible = infoIsNotNull
+        recycler.isVisible = infoIsNotNull
+        description.isVisible = infoIsNotNull
+        if (infoIsNotNull) {
+            animeEntity.info?.let {
+                studio.text = it.studios.joinToString { studio1 -> studio1.name }
+                description.text = it.description
+                genreAdapter.submitList(it.genres)
+            }
+        } else {
+            viewModel.loadAnimeInfo(animeEntity, type)
         }
         poster.setImage(animeEntity.imageUrl)
-        if (animeEntity.name == animeEntity.original) {
-            russianTitle.text = animeEntity.name
-            originalTitle.hide()
-        } else {
+        if (animeEntity.isNameRussian) {
             russianTitle.text = animeEntity.name
             originalTitle.text = animeEntity.original
+        } else {
+            russianTitle.text = animeEntity.original
+            originalTitle.hide()
         }
         date.text = animeEntity.date
         kind.text = animeEntity.kind
@@ -88,9 +113,9 @@ abstract class BaseAnimeFragment : Fragment(R.layout.fragment_anime) {
         }
     }
 
-    private fun changeFavoriteButtonDraw(btn: ImageButton, favorite: Boolean) = when(favorite) {
-        true -> btn.setDraw(R.drawable.ic_bookmark_filled_36)
-        false -> btn.setDraw(R.drawable.ic_bookmark_border_36)
+    private fun changeFavoriteButtonDraw(btn: ImageButton, favorite: Boolean) = when (favorite) {
+        true -> btn.setDraw(R.drawable.ic_bookmark_filled)
+        false -> btn.setDraw(R.drawable.ic_bookmark_border)
     }
 
     private fun changeFavoriteParam(animeEntity: AnimeEntity) {

@@ -4,7 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.android.anifind.domain.model.IDiffUtilItem
 
-abstract class GenericAdapter<T : IDiffUtilItem, VH : RecyclerView.ViewHolder?>: RecyclerView.Adapter<VH>() {
+abstract class GenericAdapter<T : IDiffUtilItem, VH : RecyclerView.ViewHolder?> :
+    RecyclerView.Adapter<VH>() {
 
     private var items: List<T> = emptyList()
 

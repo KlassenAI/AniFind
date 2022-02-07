@@ -23,7 +23,8 @@ data class AnimeResponse(
         get() = Anime(
             AnimeEntity(
                 id = id,
-                name = russian.let { if (it.isNotEmpty()) it else name },
+                isNameRussian = russian.isNotEmpty(),
+                name = russian,
                 original = name,
                 imageUrl = "https://shikimori.one" + image.original,
                 kind = when (kind) {
@@ -37,7 +38,7 @@ data class AnimeResponse(
                         kind
                     }
                 },
-                score = if (score == 0.0) "" else score.toString(),
+                score = if (score == 0.0) null else score.toString(),
                 status = when (status) {
                     "anons" -> "анонс"
                     "ongoing" -> "онгоинг"

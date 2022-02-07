@@ -6,6 +6,8 @@ data class AnimeInfo(
     val rating: String,
     val duration: Int,
     val description: String?,
+    @SerializedName("description_html")
+    val descriptionHtml: String?,
     val franchise: String?,
     @SerializedName("next_episode_at")
     val nextEpisodeAt: String?,

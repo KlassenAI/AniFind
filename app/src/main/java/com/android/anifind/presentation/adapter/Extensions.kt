@@ -13,9 +13,8 @@ import com.android.anifind.domain.model.WatchStatus.*
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 
-fun View.hide() {
-    isVisible = false
-}
+fun View.hide() { isVisible = false }
+fun View.show() { isVisible = true }
 
 fun ImageView.setImage(url: String) {
     Glide.with(this)
@@ -33,18 +32,4 @@ fun ImageView.setImage(url: String) {
 
 fun ImageButton.setDraw(@DrawableRes id: Int) {
     setImageDrawable(ContextCompat.getDrawable(context, id))
-}
-
-fun changeFavoriteButtonDraw(btn: ImageButton, favorite: Boolean) = when (favorite) {
-    true -> btn.setDraw(R.drawable.ic_bookmark_filled)
-    else -> btn.setDraw(R.drawable.ic_bookmark_border)
-}
-
-fun changeStatusButtonDraw(btn: ImageButton, status: WatchStatus) = when (status) {
-    NO -> btn.setDraw(R.drawable.ic_add)
-    WATCHING -> btn.setDraw(R.drawable.ic_play)
-    PLANNED -> btn.setDraw(R.drawable.ic_calendar_item)
-    COMPLETED -> btn.setDraw(R.drawable.ic_done)
-    HOLD -> btn.setDraw(R.drawable.ic_pause)
-    DROPPED -> btn.setDraw(R.drawable.ic_cancel)
 }

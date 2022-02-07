@@ -10,11 +10,10 @@ import javax.inject.Inject
 open class BaseViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
-
     fun requestAnimeInfo(id: Int) = repository.requestAnimeInfo(id)
-
     fun getAnime(id: Int) = repository.getAnime(id)
     fun insert(animeEntity: AnimeEntity) = repository.insert(animeEntity)
     fun update(animeEntity: AnimeEntity) = repository.update(animeEntity)
     fun delete(animeEntity: AnimeEntity) = repository.delete(animeEntity)
+    fun updateWithResult(animeEntity: AnimeEntity) = repository.updateWithResult(animeEntity)
 }

@@ -32,17 +32,13 @@
                     android:textSize="17sp"
                     android:textStyle="bold" />
 
-                <Button
+                <TextView
                     android:id="@+id/btn_show_recent_list"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:insetTop="0dp"
-                    android:layout_marginStart="4dp"
-                    android:insetBottom="0dp"
-                    android:minWidth="0dp"
-                    android:minHeight="40dp"
-                    android:text="@string/list" />
+                    android:textColor="@color/design_default_color_primary"
+                    android:padding="8dp"
+                    android:text="@string/all" />
 
             </LinearLayout>
 
@@ -73,7 +69,7 @@
                 android:id="@+id/btn_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/search"
                 app:icon="@drawable/ic_search"
                 app:iconGravity="textStart" />
@@ -86,31 +82,6 @@
                 android:text="@string/filter"
                 app:icon="@drawable/ic_filter"
                 app:iconGravity="textStart" />
-
-            <Button
-                android:id="@+id/btn_random"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/random"
-                app:icon="@drawable/ic_shuffle"
-                app:iconGravity="textStart" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/recommendations"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="17sp"
-                android:textStyle="bold" />
 
         </LinearLayout>
 
